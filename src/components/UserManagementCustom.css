@@ -1,0 +1,116 @@
+/* Styles généraux */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Conteneur du formulaire */
+  .my-3 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-start; /* Permet d'aligner tous les champs à gauche */
+    align-items: center; /* Aligne tous les éléments au centre verticalement */
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+   .btntt{
+
+    margin-top: 22px;
+   
+   }
+  
+  /* Div pour chaque champ */
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 180px;
+    border-radius: 12px;
+    max-width: 250px;
+    margin-bottom: 10px; /* Espacement entre les champs */
+  }
+  
+  /* Champs de saisie (inputs et selects) */
+  input,
+  select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+    transition: border 0.3s ease;
+    width: 100%; /* Les champs prennent toute la largeur de leur conteneur */
+  }
+  
+  input:focus,
+  select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  /* Style pour les labels */
+  label.filter-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  /* Bouton Ajouter */
+  button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 5px;
+    border-radius: 12px;
+    width: auto; /* Le bouton a une largeur automatique */
+    align-self: center; /* Aligne le bouton au centre de la ligne */
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+  
+  /* Disposition horizontale des champs */
+  .my-3 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-bottom: 10px;
+    
+  }
+  
+  /* Réactivité mobile */
+  @media (max-width: 768px) {
+    .my-3 {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .input-group {
+      width: 100%;
+    }
+  
+    button {
+      width: 100%;
+    }
+  }
+  

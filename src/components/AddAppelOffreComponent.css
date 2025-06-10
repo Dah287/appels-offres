@@ -1,0 +1,28 @@
+/* styles.css */
+.input-numero {
+    background-color: #f0f8ff; /* Bleu clair */
+}
+
+.input-entite {
+    background-color: #f5f5dc; /* Beige */
+}
+
+.input-objet {
+    background-color: red; /* Vert clair */
+}
+
+.input-typeMarche {
+    background-color: #ffcccb; /* Rouge clair */
+}
+
+.input-estimation {
+    background-color: #fffacd; /* Jaune clair */
+}
+
+.input-pme {
+    background-color: #e6f7ff; /* Bleu pâle */
+}
+
+.input-date {
+    background-color: #f8f8ff; /* Gris clair */
+}

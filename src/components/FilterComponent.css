@@ -1,0 +1,95 @@
+
+  
+@media only screen and (max-width: 1280px) {
+    .filter-card label,
+    .form-select {
+      font-size: 0.8rem !important; ; /* Réduction de la taille du texte */
+    }
+  }
+  /* table {
+  width: 60%;
+  border-collapse: collapse;
+  text-align: center;
+} */
+/* th, td {
+  border: 1px solid black;
+  padding: 10px;
+} */
+/* .devise {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid black;
+  padding: 5px;
+  width: 100px;
+}
+.haut {
+  font-weight: bold;
+  width: 100%;
+  border-bottom: 2px solid black;
+  padding: 5px 0;
+}
+.bas {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 2px solid black;
+  padding: 5px 0;
+}
+.bas div {
+  width: 50%;
+  text-align: center;
+  border-right: 1px solid black;
+}
+.bas div:last-child {
+  border-right: none;
+}
+.monnaie {
+  font-style: italic;
+  padding: 5px 0;
+} */
+.haut {
+  font-weight: bold;
+   width: 100%;
+  /*border-bottom: 2px solid black;
+  padding: 5px 0; */
+}
+
+/* Style pour le tableau avec en-tête fixe */
+.table-responsive {
+  max-height: 70vh; /* Ajustez cette valeur selon vos besoins */
+  overflow-y: auto;
+}
+
+.table-responsive thead th {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa; /* Couleur de fond de l'en-tête */
+  z-index: 10;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Pour le th avec la classe numero-colonne */
+.numero-colonne {
+  position: sticky;
+  right: 0;
+  background-color: #f8f9fa;
+  z-index: 5;
+}
+
+.bg-jugement {
+  background-color: #CD853F !important; /* Utilisez !important si nécessaire pour surcharger */
+}
+
+.bg-ouverture {
+  background-color: #50C878 !important;
+}
+
+.bg-transmis {
+  background-color: #FFFF00 !important;
+}
+.table {
+  --bs-body-bg: transparent !important;
+  --bs-table-bg: transparent !important;
+  background-color: transparent !important;
+}

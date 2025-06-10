@@ -1,0 +1,23 @@
+
+:root {
+  /* Override des couleurs de base */
+  --bs-body-bg: transparent; /* Désactive le fond blanc */
+  --bs-body-color: #212529; /* Garde la couleur de texte par défaut ou change-la */
+
+  /* Optionnel : Désactive d'autres variables si nécessaire */
+  --bs-table-bg: transparent;
+  --bs-table-color: inherit;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

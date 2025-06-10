@@ -1,0 +1,23 @@
+/* Style par défaut */
+
+  /* Réduction de la taille du texte pour les petits écrans */
+  @media only screen and (max-width: 1280px) {
+    .navbar-brand span {
+      font-size: 0.9rem;
+    }
+  
+    .nav-link {
+      font-size: 0.8rem;
+    }
+  
+    button {
+      font-size: 0.9rem;
+    }
+    .navheigh{
+        height: 55px !important;
+    }
+    .lll{
+       font-size: 10px
+    }
+  }
+  

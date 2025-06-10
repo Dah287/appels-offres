@@ -1,0 +1,58 @@
+th  td {
+  
+
+  font-size: 12px; /* Taille du texte réduite */
+  text-align: center;
+  
+}
+
+
+.table tbody tr:nth-child(odd) {
+  background-color: #FFA500; /* Bleu clair */
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #D3D3D3; /* Gris clair */
+}
+
+.montant-row {
+  background-color: #FFFF00 !important; /* Jaune pour la ligne Montant */
+}
+.vvvv{
+
+padding-left: 100px;
+padding-right: 100px;
+padding-top: 0px;
+}
+@media only screen and (max-width: 1280px) {
+
+
+.dashboard-title {
+  font-size: 1.4rem; /* Ajustement de la taille du texte si nécessaire */
+}
+.table{
+  margin-left:  0px  !important;
+
+}
+
+}
+
+
+.styled-table td {
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  padding: 8px 12px; /* espace intérieur uniforme */
+  vertical-align: middle; /* alignement vertical centré */
+  line-height: 1.5; /* hauteur de ligne uniforme */
+}
+
+
+.styled-table th {
+  font-size: 20px;
+  text-align: center;
+ font-weight: bold;
+ 
+  color: black;            /* Texte blanc */
+     /* Texte en gras */
+}
