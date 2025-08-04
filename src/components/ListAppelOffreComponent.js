@@ -390,7 +390,7 @@ useAutoLogout();
                             <div style={{ borderTop: "1px solid black", paddingTop: "2px", marginTop: "2px" }}>Heure</div>
                         </th>
                         <th style={{ textAlign: "center", width: "80px" }}>Jugement</th>
-                        <th style={{ textAlign: "center", width: "80px" }}>Observations</th>
+                        <th style={{ textAlign: "center", width: "80px" }}>Adjudicataire</th>
                         <th className="cccc numero-colonne" style={{ 
                             textAlign: "center", 
                             width: "85px",

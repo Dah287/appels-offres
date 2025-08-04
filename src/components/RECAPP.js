@@ -77,7 +77,7 @@ const bloque = "oui"
         AppelOffreService.getAllAppelOffre(entiteF,typeMarcheF,fitre,visa).then((response) => {
           console.log("Données pr:", response);
                                          // Filtrer les résultats pour ne garder que ceux avec dateJugement non null
-                                         const filteredData = response.data.filter(bc => bc.dateJugement !== null && (bc.statut !== "Infructueux" || bc.statut !== "Definitivement" || bc.statut !== "Annulé"));
+                                         const filteredData = response.data.filter(bc => bc.dateJugement !== null && bc.statut !== "Infructueux" && bc.statut !== "Definitivement" && bc.statut !== "Annulé" );
                                          setAppelOffre(filteredData);
             //setAppelOffre(response.data)
             console.log(entiteF);
@@ -355,13 +355,13 @@ const deleteappelOffre = (appelOffreId) => {
     <tr>
       <th style={{ textAlign: "center",width: "40px" }}>Entité</th>
       <th  style={{ textAlign: "center",  width: "180px" }}>Objet</th>
-      <th style={{ textAlign: "center",width: "50px" }}>N° Marché</th>
+      <th style={{ textAlign: "center",width: "60px" }}>N° Marché</th>
       {/* <th style={{ width: "70px" }}>Estimation</th>
       <th style={{ textAlign: "center",width: "50px" }}>PME</th> */}
       <th style={{ textAlign: "center",width: "80px" }}>Attributaire</th>
       
-      <th style={{ textAlign: "center" ,width: "80px" }}>Montant de Marché TTC</th>
-      <th style={{ textAlign: "center",width: "50px" }}>Numero Visa</th>
+      <th style={{ textAlign: "center" ,width: "80px" }}>Montant du Marché TTC</th>
+      {/* <th style={{ textAlign: "center",width: "50px" }}>Numero Visa</th> */}
       <th style={{ textAlign: "center",width: "80px"  }}>Marché Visé</th>
       <th style={{ textAlign: "center",width: "80px"  }}>ODS</th>
       <th style={{ textAlign: "center",width: "80px"  }}>Délai d'exécution</th>
@@ -433,12 +433,21 @@ const deleteappelOffre = (appelOffreId) => {
         
           {/* <td>{appel.dateOuverturePrevisionnelle}</td> */}
           <td style={{ textAlign: "center"}}>{appel.montantTTC?.toLocaleString('fr-MA')}</td>
-          <td style={{ textAlign: "center",width: "50px" }}>{appel.numeroVisa}</td>
-         <td style={{ textAlign: "center"}}>
-  {getMarcheVise(appel) instanceof Date 
+          {/* <td style={{ textAlign: "center",width: "50px" }}>{appel.numeroVisa}</td> */}
+         {/* <td style={{ textAlign: "center"}}>
+
+</td> */}
+
+<td style={{ textAlign: "center" }}>
+          <div >
+          {getMarcheVise(appel) instanceof Date 
     ? getMarcheVise(appel).toLocaleDateString() 
     : getMarcheVise(appel)}
-</td>
+          </div>
+          {appel.numeroVisa && (
+          <div style={{ borderTop: "1px solid white", paddingTop: "8px", marginTop: "6px" }}>N°: {appel.numeroVisa}</div>
+        )}
+          </td>
           <td style={{ textAlign: "center"}}>{appel.ods}</td>
           <td style={{ textAlign: "center"}}>{appel.delai}</td>
      
