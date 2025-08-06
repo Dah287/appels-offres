@@ -32,7 +32,9 @@ const [totals, setTotals] = useState({
 
     const fetchDashboardData = async () => {
         try {
+          console.log("depu ici :");
             const response = await AppelOffreService.getdashboard();
+              console.log("depu ici2 :");
             setAppelOffresData(response.data);
         } catch (err) {
             console.error("Erreur lors de la récupération des données :", err);

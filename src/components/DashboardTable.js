@@ -6,7 +6,7 @@ const DashboardTable = () => {
 
   // Fonction pour récupérer les données du backend
   useEffect(() => {
-    fetch("http://localhost:8080/api/v1/bande-commande")
+    fetch("http://192.168.1.27:8080/api/v1/bande-commande")
       .then((response) => response.json())
       .then((data) => {
         setData(processData(data)); // Traitement des données

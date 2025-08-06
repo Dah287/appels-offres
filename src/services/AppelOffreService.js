@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = "http://192.168.1.27:8080";
 const AUTH_API_URL = `${API_BASE_URL}/auth`; // Endpoint d'authentification
 const APP_API_URL = `${API_BASE_URL}/api/v1/appelOffre`; // Ton endpoint principal
 
@@ -111,6 +111,16 @@ class AppelOffreService {
         return axios.get(`${APP_API_URL}/dashboards`, {
             params: { entite }
         });
+
+        
+          
+    }
+
+        getdashboard() {
+        return axios.get(`${APP_API_URL}/dashboard`);
+
+        
+          
     }
 
     getDashboardGlobal() {
