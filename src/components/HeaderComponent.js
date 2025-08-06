@@ -137,7 +137,7 @@ const HeaderComponent = () => {
     
       </>
     )}
-    {user.role === 'sous admin' && (
+    {user.role === 'sous_admin' && (
       <>
       <Link
         className="nav-link text-white mx-2"

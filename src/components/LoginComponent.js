@@ -21,29 +21,43 @@ const LoginComponent = () => {
         const utilisateuropt = {username, password}
 
     
-            AppelOffreService.login(utilisateuropt).then((response) => {
-                console.log(response.data)
-                if(response.data=== "admin"){
-                  localStorage.setItem('user', JSON.stringify({ username, role: 'admin' ,nom:'Mr. ANDALOUSSI'}));
-                    history.push('/appelOffres')
-                }else if(response.data=== "sous admin"){
-                  localStorage.setItem('user', JSON.stringify({ username, role: 'sous admin' ,nom:'Mr. KAFIH'}));
-                  history.push('/ListSA')
-                }
-                else if(response.data=== "no"){
-                  setMessage("mot de pass ou username incorct")
-                }else{
-                  let entitee = response.data;
-                  setMessage("vert " +entitee)
-                  localStorage.setItem('user', JSON.stringify({ username, role: 'user',nom: entitee }));
-                  history.push(`/ListAppelOffreParEntite/${entitee}`);
-                  
-             //     <Link className="btn btn-info" to={`/edit-employee/${employee.id}`} >Update</Link>
-                }
-               
-            }).catch(error => {
-                console.log(error)
-            })
+AppelOffreService.login(utilisateuropt)
+  .then((response) => {
+    const data = response.data;
+
+    if (data.role === "admin") {
+      localStorage.setItem('user', JSON.stringify({ 
+        username: data.username, 
+        role: 'admin', 
+        nom: 'Mr. ANDALOUSSI' 
+      }));
+      history.push('/appelOffres');
+
+    } else if (data.role === "sous_admin") {
+      localStorage.setItem('user', JSON.stringify({ 
+        username: data.username, 
+        role: 'sous_admin', 
+        nom: 'Mr. KAFIH' 
+      }));
+      history.push('/ListSA');
+
+    } else if (data.role === "user" && data.entite) {
+      const entitee = data.entite;
+      localStorage.setItem('user', JSON.stringify({ 
+        username: data.username, 
+        role: 'user', 
+        nom: entitee 
+      }));
+      history.push(`/ListAppelOffreParEntite/${entitee}`);
+
+    } else {
+      setMessage("Identifiants invalides");
+    }
+  })
+  .catch((error) => {
+    console.error("Erreur de login", error);
+    setMessage("Erreur de connexion");
+  });
 
         
         

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BANDE_COMMANDE_BASE_REST_API_URL = "http://192.168.1.81:8080/api/v1/bande-commande";
+const BANDE_COMMANDE_BASE_REST_API_URL = "http://localhost:8080/api/v1/bande-commande";
 
 class BandeCommandeService {
     // Récupère toutes les bandes de commande avec filtres optionnels
