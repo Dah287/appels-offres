@@ -29,7 +29,7 @@ import DashboardBC from './components/DashboardBC';
 
 function App() {
 
- // const isAuthenticated = !!localStorage.getItem('user'); // Vérifie si l'utilisateur est connecté
+ // const isAuthenticated = !!sessionStorage.getItem('user'); // Vérifie si l'utilisateur est connecté
 
   return (
     <div >

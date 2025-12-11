@@ -25,6 +25,7 @@ const UpdateRecappAppelOffreComponent = () => {
   const [ods, setOds] = useState([])
   const [delai, setDelai] = useState([])
   const [nbrmarche, setNbrmarche] = useState([])
+  const [nbravenant, setNbravenant] = useState('')
   const history = useHistory();
   const { id, entitee, bloque } = useParams();
 
@@ -36,7 +37,7 @@ const UpdateRecappAppelOffreComponent = () => {
 
   const saveOrUpdatedAppelOffre = (e) => {
     e.preventDefault();
-    const appelOffre = { attributaire, montantTTC, marcheVise,numeroVisa,ods,delai,nbrmarche };
+    const appelOffre = { attributaire, montantTTC,nbravenant, marcheVise,numeroVisa,ods,delai,nbrmarche };
 
     if (id) {
         console.log(appelOffre)
@@ -76,6 +77,7 @@ const UpdateRecappAppelOffreComponent = () => {
           setOds(response.data.ods)
           setDelai(response.data.delai)
           setNbrmarche(response.data.nbrmarche)
+          setNbravenant(response.data.nbravenant)
         })
         .catch((error) => {
           console.error(error);
@@ -145,6 +147,18 @@ const UpdateRecappAppelOffreComponent = () => {
                     onChange={(e) => setMontantTTC(e.target.value)}
                   />
                 </div>
+
+                <div className = "form-group mb-2">
+                                    <label className = "form-label"> Nombre D'avenants :</label>
+                                    <input
+                                        type = "number"
+                                        placeholder = "Enter nombre D'avenants"
+                                        name = "nbrseance"
+                                        className = "form-control"
+                                        value = {nbravenant}
+                                        onChange = {(e) => setNbravenant(e.target.value)}
+                                        />
+                                </div>
                 <div className="form-group mb-2">
                   <label className="form-label">ODS :</label>
                   <input

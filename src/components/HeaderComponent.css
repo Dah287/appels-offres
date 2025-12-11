@@ -1,23 +1,94 @@
-/* Style par défaut */
+/* ✅ Style général */
+.navheigh {
+  height: 65px !important;
+}
 
-  /* Réduction de la taille du texte pour les petits écrans */
-  @media only screen and (max-width: 1280px) {
-    .navbar-brand span {
-      font-size: 0.9rem;
-    }
-  
-    .nav-link {
-      font-size: 0.8rem;
-    }
-  
-    button {
-      font-size: 0.9rem;
-    }
-    .navheigh{
-        height: 55px !important;
-    }
-    .lll{
-       font-size: 10px
-    }
+.btn-nav {
+  border: 2px solid #fff;
+  border-radius: 20px;
+  padding: 6px 14px;
+  color: white;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-nav:hover {
+  background-color: #ffffff33;
+  transform: scale(1.05);
+  text-decoration: none;
+  color: #fff;
+}
+
+/* === Adaptation pour petits écrans === */
+@media only screen and (max-width: 1280px) {
+  /* Réduction de la taille du texte */
+  .navbar-brand span {
+    font-size: 0.85rem;
   }
-  
+
+  .nav-link,
+  .btn-nav {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+  }
+
+  .lll {
+    font-size: 10px;
+  }
+
+  .navheigh {
+    height: 55px !important;
+  }
+
+  /* ✅ Masquer logos et texte du titre pour gagner de la place */
+  .navbar-brand img,
+  .navbar-brand span {
+    display: none !important;
+  }
+
+  /* ✅ Réduction du gap entre éléments */
+  .navbar {
+    padding: 0.3rem 0.8rem !important;
+  }
+
+  /* Bloc logos (ORMVAD + MAPDEFF) */
+  .brand-section {
+    display: none !important;
+  }
+
+  /* Bloc utilisateur (initiale + nom) */
+  .user-section {
+    display: none !important;
+  }
+
+  /* ✅ Centrer les boutons */
+  .navbar .d-flex.gap-2 {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+/* === Pour écrans très petits (tablettes ou < 992px) === */
+@media only screen and (max-width: 992px) {
+  .btn-nav {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .navbar .d-flex.gap-3 {
+    gap: 8px !important;
+  }
+
+  /* Réduction taille bouton déconnexion */
+  .btn-outline-light {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+  }
+}

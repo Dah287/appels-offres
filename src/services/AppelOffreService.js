@@ -60,6 +60,11 @@ getDashboard(entite) {
       params: { entite }
   });
 }
+getDashboard1(entite) {
+  return axios.get(AppelOffre_BASE_REST_API_URL + '/dashboards/annules-infructueux', {
+      params: { entite }
+  });
+}
 getdashboard(){
    return axios.get(AppelOffre_BASE_REST_API_URL + '/dashboard');
 }

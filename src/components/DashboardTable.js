@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import useAutoLogout from './useAutoLogout';
 const DashboardTable = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +50,7 @@ const DashboardTable = () => {
 
     return result;
   };
-
+  useAutoLogout();
   return (
     <div>
       <h1>DashboardTable des Bande Commande</h1>

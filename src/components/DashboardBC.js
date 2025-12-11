@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Select, Card, Statistic, DatePicker, Spin, message } from 'antd';
 import axios from 'axios';
 import './Dashboard.css';
-
+import useAutoLogout from './useAutoLogout';
 const { RangePicker } = DatePicker;
 
 const DashboardBC = () => {
@@ -184,7 +184,7 @@ const DashboardBC = () => {
         const entitesOrange = ['DDA', 'SMG', 'DRH', ];
         return entitesOrange.includes(record.entite) ? 'row-orange' : 'row-gray';
     };
-    
+    useAutoLogout();
     return (
         <div className="dashboard-container">
             <Spin spinning={loading} tip="Chargement des données...">

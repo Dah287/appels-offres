@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import UserService from '../services/UserService';
 import './UserManagementCustom.css';
+import useAutoLogout from './useAutoLogout';
 function UserManagement() {
   const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState({ username: '', password: '', role: '', entite: '' });
@@ -33,7 +34,7 @@ function UserManagement() {
       .then(fetchUsers)
       .catch(error => console.error("Erreur lors de la suppression de l'utilisateur :", error));
   };
-
+  useAutoLogout();
   return (
     <div className="container mt-5">
       <h2>Gestion des Utilisateurs</h2>

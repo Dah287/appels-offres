@@ -373,6 +373,7 @@ useAutoLogout();
                         <th style={{ textAlign: "center", width: "40px", position: 'sticky', left: 0, zIndex: 110, background: 'white' }}>Entité</th>
                         <th style={{ textAlign: "center", width: "280px" }}>Objet</th>
                         <th style={{ textAlign: "center", width: "50px" }}>Type Marché</th>
+                        <th style={{ textAlign: "center", width: "40px" }}>N° AO</th>
                         <th className="devise" style={{ width: "110px", textAlign: "center", overflow: "hidden" }}>
                             <div className="haut">Estimation</div>
                             <div className="bas" style={{ display: "flex", width: "100%" }}>
@@ -384,13 +385,13 @@ useAutoLogout();
                         <th style={{ textAlign: "center", width: "80px" }}>Publication Prev</th>
                         <th style={{ textAlign: "center", width: "80px" }}>Transmis Commission</th>
                         <th style={{ textAlign: "center", width: "80px" }}>Observation Commission</th>
-                        <th style={{ textAlign: "center", width: "40px" }}>N° AO</th>
+                       
                         <th style={{ textAlign: "center", width: "80px" }}>
                             <div>Ouverture Reelle</div>
                             <div style={{ borderTop: "1px solid black", paddingTop: "2px", marginTop: "2px" }}>Heure</div>
                         </th>
                         <th style={{ textAlign: "center", width: "80px" }}>Jugement</th>
-                        <th style={{ textAlign: "center", width: "80px" }}>Observations</th>
+                        <th style={{ textAlign: "center", width: "92px" }}>Observations</th>
                         <th className="cccc numero-colonne" style={{ 
                             textAlign: "center", 
                             width: "85px",
@@ -454,6 +455,7 @@ useAutoLogout();
             {appel.objet}
           </td>
           <td style={{ textAlign: "center"}}>{appel.typeMarche}</td>
+          <td style={{ textAlign: "center" ,width: "60px"}}>{appel.numero}</td>
            {/* <td>{appel.estimation?.toLocaleString('fr-MA')}</td> */}
            <td className="devise" style={{ width: "70px", textAlign: "center", overflow: "hidden" }}>
             <div className="haut">{appel.estimation?.toLocaleString('fr-MA')}</div>
@@ -467,7 +469,7 @@ useAutoLogout();
           {/* <td>{appel.dateOuverturePrevisionnelle}</td> */}
           <td>{appel.datetransmisCe}</td>
           <td>{appel.dateobservationMc}</td>
-          <td style={{ textAlign: "center" ,width: "60px"}}>{appel.numero}</td>
+        
           {/* <td>{appel.dateOuvertureReelle}</td> */}
             {/* heure */}
             <td style={{ textAlign: "center" }}>

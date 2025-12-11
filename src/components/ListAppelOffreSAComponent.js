@@ -12,6 +12,8 @@ const [fitre, setfitre] = useState('')
 const [appelOffre, setAppelOffre] = useState([])
 const {enttt} = useParams();
 const [visa, setvisa] = useState('')
+const [showFilters, setShowFilters] = useState(false); // État pour gérer l'affichage des filtres
+
 const [totals, setTotals] = useState({
   totalAppelOffres: 0,
   estimationTotalAppelOffres: 0,
@@ -25,7 +27,15 @@ const [totals, setTotals] = useState({
   estimationTotalJuge: 0,
   estimationTotalPme: 0,
   estimationTotalVisa: 0,
-  totalEnCoursExamen: 0
+  totalEnCoursExamen: 0,
+  totalNbrSeance: 0,
+  totalAnnules: 0
+});
+
+const [totalss, setTotalss] = useState({
+
+  totalAnnules: 0,
+  totalInfructueux: 0
 });
 
 const ent = "SA"
@@ -33,7 +43,8 @@ const ent = "SA"
     
         getAllAppelOffre(entiteF,typeMarcheF,fitre,visa);
         getDashboardData(entiteF); // Appel avec l'entité sélectionnée
-    }, [entiteF, typeMarcheF,fitre,visa])
+        getDashboardData1(entiteF); // Appel avec l'entité sélectionnée
+      }, [entiteF, typeMarcheF,fitre,visa])
 
     const getAllAppelOffre = (entiteF,typeMarcheF,fitre,visa) => {
         AppelOffreService.getAllAppelOffre(entiteF,typeMarcheF,fitre,visa).then((response) => {
@@ -76,8 +87,10 @@ const ent = "SA"
 
                 totalVisa: entityData["Total Visa"],
                 estimationTotalVisa: entityData["totalsEstimationTotalVisa"],
+                //totalAnnules: entityData["Total Annulés"],
     
-                totalEnCoursExamen: entityData["appelOffresEnCoursExamen"]
+                totalEnCoursExamen: entityData["appelOffresEnCoursExamen"],
+                totalNbrSeance: entityData["totalNbrSeance"]
               });
             } else {
               console.log("Aucune donnée trouvée pour l'entité:", entite);
@@ -105,7 +118,53 @@ const ent = "SA"
                 totalVisa: globalData["appelOffresVisa"],
                 estimationTotalVisa: globalData["totalsEstimationTotalVisa"],
     
-                totalEnCoursExamen: globalData["appelOffresEnCoursExamen"]
+                totalEnCoursExamen: globalData["appelOffresEnCoursExamen"],
+                totalNbrSeance: globalData["totalNbrSeance"],
+                //: globalData["Total Annulés"]
+              });
+            } else {
+              console.log("Aucune donnée globale trouvée.");
+            }
+          }
+        } else {
+          console.log("Aucune donnée reçue.");
+        }
+      }).catch((error) => {
+        console.error("Erreur lors de la récupération des données:", error);
+      });
+    };
+
+
+    const getDashboardData1 = (entite) => {
+      AppelOffreService.getDashboard1(entite).then((response) => {
+        const data = response.data;
+    
+        console.log("Données reçues:", data);
+        console.log("Entité sélectionnée:", entite);
+    
+        if (data.length > 0) {
+          if (entite) {
+            const entityData = data.find(row => row.entite === entite);
+            if (entityData) {
+              console.log("Données de l'entité trouvées:", entityData);
+              setTotalss({
+
+
+                totalAnnules: entityData["Total Annulés"],
+                totalInfructueux: entityData["Total Infructueux"]
+
+              });
+            } else {
+              console.log("Aucune donnée trouvée pour l'entité:", entite);
+            }
+          } else {
+            const globalData = data.find(row => row.entite === "Total");
+            if (globalData) {
+              console.log("Données globales trouvées:", globalData);
+              setTotalss({
+
+                totalAnnules: globalData["Total Annulés"],
+                totalInfructueux: globalData["Total Infructueux"]
               });
             } else {
               console.log("Aucune donnée globale trouvée.");
@@ -175,6 +234,29 @@ const deleteappelOffre = (appelOffreId) => {
     <div className="container-fluid">
     <h2 className="filter-section-title text-center nnn" >Liste des Appels d'Offres</h2>
 
+
+            {/* Bouton pour afficher/masquer les filtres */}
+            <div className="row my-2">
+  <div className="col-12 text-end mb-3">
+    <button 
+      className="btn btn-outline-primary me-2"
+      onClick={() => setShowFilters(!showFilters)}
+    >
+      {showFilters ? '▲ Masquer les filtres' : '▼ Afficher les filtres'}
+    </button>
+
+    {/* <button
+      className="btn btn-success"
+      onClick={exportToExcel}
+    >
+      <FileDownloadIcon style={{ verticalAlign: 'middle' }} /> Export Excel
+    </button> */}
+  </div>
+</div>
+
+
+                        {/* Filtres - conditionnellement affichés */}
+                        {showFilters && (
   <div className="row my-2">
   <div className="col-12 col-md-2 mb-3">
     <div className="filter-card">
@@ -238,6 +320,9 @@ const deleteappelOffre = (appelOffreId) => {
   <p><strong>AO. Lancés : <span className="stat-value"style={{paddingRight: "6px"}}>{totals.totalLance}</span> (Estimation: <span className="stat-value">{formatToMDH(totals.estimationTotalLance)}</span>)</strong></p>
   <p><strong>AO. Jugés : <span className="stat-value"style={{paddingRight: "6px"}}>{totals.totalJuge}</span> (Estimation: <span className="stat-value">{formatToMDH(totals.estimationTotalJuge)}</span>)</strong></p>
   <p><strong>AO. PME : <span className="stat-value"style={{paddingRight: "6px"}}>{totals.totalPme}</span> (Estimation: <span className="stat-value">{formatToMDH(totals.estimationTotalPme)}</span>)</strong></p>
+  <p><strong>AO. Nombre de Séances : <span className="stat-value"style={{paddingRight: "6px"}}>{totals.totalNbrSeance}</span> </strong></p>
+  <p><strong>AO. Total Annules : <span className="stat-value"style={{paddingRight: "6px"}}>{totalss.totalAnnules}</span> </strong></p>
+  <p><strong>AO. Total Infructueux : <span className="stat-value"style={{paddingRight: "6px"}}>{totalss.totalInfructueux}</span> </strong></p>
   {/* <p><strong>Marchés Visés : <span className="stat-value"style={{paddingRight: "6px"}}>{totals.totalVisa}</span> (Estimation: <span className="stat-value">{formatToMDH(totals.estimationTotalVisa)}</span>)</strong></p> */}
 </div>
 
@@ -249,12 +334,18 @@ const deleteappelOffre = (appelOffreId) => {
       </Link>
 </div>
   </div>
+  
+)}
 </div>
 
 
 <br></br>
     {/* Table */}
-    <div className="table-responsive">
+    <div className="table-responsive" style={{ 
+            maxHeight: 'calc(110vh - 300px)',
+            overflowY: 'auto',
+            position: 'relative'
+        }}>
     <table className="table table-bordered table-striped" style={{ tableLayout: "fixed" }}>
   <thead>
     <tr>

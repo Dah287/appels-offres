@@ -1,0 +1,140 @@
+/* 🌿 Fond vert plein écran */
+.login-page {
+    height: 92vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #2e7d32, #4caf50, #66bb6a);
+    background-size: 300% 300%;
+    animation: gradientShift 10s ease infinite;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden; /* ⭐️ Bloque tout scroll */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* 📦 Carte blanche centrée - AJOUTE CETTE LIGNE */
+  .login-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 35px 30px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin: 0;
+    box-sizing: border-box;
+    /* ⭐️ Empêche le débordement vertical */
+    max-height: calc(100vh - 40px); /* Ajuste selon besoin */
+    overflow-y: auto; /* Optionnel : si tu veux un scroll interne (pas recommandé ici) */
+  }
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+
+  
+  /* 🖼️ Logo */
+  .login-logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  /* ✨ Inputs modernes */
+  .modern-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: all 0.3s ease;
+  }
+  
+  .modern-input:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.4);
+    outline: none;
+  }
+  
+  /* 🔘 Bouton vert */
+  .btn-modern {
+    background-color: #28a745;
+    border: none;
+    color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .btn-modern:hover {
+    background-color: #218838;
+    transform: scale(1.03);
+  }
+  
+  /* ⚠️ Message d'erreur */
+  .alert {
+    background-color: #f8d7da;
+    color: #842029;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+  }
+  /* ✅ Corrige le centrage des labels et inputs */
+.login-card form {
+    text-align: left; /* Important : on remet à left pour le contenu du formulaire */
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  
+  .login-card .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .login-card .form-group label {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.4rem;
+  }
+  
+  /* ✅ Assure que l'input prend toute la largeur sans débordement */
+  .login-card .modern-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: all 0.3s ease;
+    box-sizing: border-box; /* ⭐ Essentiel pour éviter les débordements */
+  }
+  
+  .login-card .modern-input:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.4);
+    outline: none;
+  }
+  
+  /* 🔘 Bouton centré et large */
+  .btn-modern {
+    width: 100%;
+    background-color: #28a745;
+    border: none;
+    color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .btn-modern:hover {
+    background-color: #218838;
+    transform: scale(1.03);
+  }

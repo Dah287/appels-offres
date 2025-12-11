@@ -9,7 +9,7 @@ import useAutoLogout from './useAutoLogout';
 import FileDownloadIcon from '@mui/icons-material/FileDownload'; // Icône pour l'export Excel
 const RECAPP = () => {
 
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(sessionStorage.getItem('user'));
   
 const [entiteF, setEntiteF] = useState('')
 const [typeMarcheF, settypeMarcheF] = useState('')
@@ -63,7 +63,9 @@ const [totals, setTotals] = useState({
   estimationTotalPme: 0,
   estimationTotalVisa: 0,
   estimationTotalOds: 0,
-  totalEnCoursExamen: 0
+  totalEnCoursExamen: 0,
+  totalNbravenant: 0,
+
 });
 
 const bloque = "oui"
@@ -122,7 +124,8 @@ const bloque = "oui"
                 totalOds: entityData["Total Ods"],
                 estimationTotalOds: entityData["totalsEstimationTotalOds"],
     
-                totalEnCoursExamen: entityData["appelOffresEnCoursExamen"]
+                totalEnCoursExamen: entityData["appelOffresEnCoursExamen"],
+                totalNbravenant: entityData["totalNbravenant"]
               });
             } else {
               console.log("Aucune donnée trouvée pour l'entité:", entite);
@@ -153,7 +156,8 @@ const bloque = "oui"
                 totalOds: globalData["appelOffresOds"],
                 estimationTotalOds: globalData["totalsEstimationTotalOds"],
     
-                totalEnCoursExamen: globalData["appelOffresEnCoursExamen"]
+                totalEnCoursExamen: globalData["appelOffresEnCoursExamen"],
+                totalNbravenant: globalData["totalNbravenant"]
               });
             } else {
               console.log("Aucune donnée globale trouvée.");
@@ -330,6 +334,7 @@ const deleteappelOffre = (appelOffreId) => {
   <p><strong>Total des Marches : <span className="stat-value" style={{paddingRight: "15px"}}>{totals.totalJuge}</span> (Montant : <span className="stat-value">{formatToMDH(totals.estimationTotalAppelOffres)}</span>)</strong></p>
   <p><strong>Marchés Visés : <span className="stat-value"style={{paddingRight: "15px"}}>{totals.totalVisa}</span> (Montant : <span className="stat-value">{formatToMDH(totals.estimationTotalVisa)}</span>)</strong></p>
  <p><strong>Marchés ODS : <span className="stat-value"style={{paddingRight: "15px"}}>{totals.totalOds}</span> (Montant : <span className="stat-value">{formatToMDH(totals.estimationTotalOds)}</span>)</strong></p>
+ <p><strong>Nombre D'avenants : <span className="stat-value"style={{paddingRight: "15px"}}>{totals.totalNbravenant}</span> </strong></p>
   {/* <p><strong>AO. PME : <span className="stat-value"style={{paddingRight: "15px"}}>{totals.totalPme}</span> (Estimation : <span className="stat-value">{formatToMDH(totals.estimationTotalPme)}</span>)</strong></p> */}
  
 </div>

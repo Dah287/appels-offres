@@ -14,6 +14,7 @@ const AddAppelOffreComponent = () => {
     const [ce, setCe] = useState('')
     const [pme, setPme] = useState('')
     const [statut, setStatut] = useState(null)
+    const [nbrseance, setNbrseance] = useState('')
     // 
     const [moisPublicationPrevisionnelle	, setMoisPublicationPrevisionnelle] = useState('')
     const [dateOuverturePrevisionnelle	, setDateOuverturePrevisionnelle] = useState('')
@@ -91,7 +92,7 @@ const AddAppelOffreComponent = () => {
             alert("Veuillez remplir  Date Ouverture Previsionnelle  !");
             return;
         }
-        const appelOffre = {numero, entite, objet,typeMarche,estimation,pme,moisPublicationPrevisionnelle,dateOuverturePrevisionnelle,datetransmisCe,dateobservationMc,dateOuvertureReelle,heure,dateJugement,observations,cp,ce,statut}
+        const appelOffre = {numero, entite, objet,typeMarche,estimation,nbrseance,pme,moisPublicationPrevisionnelle,dateOuverturePrevisionnelle,datetransmisCe,dateobservationMc,dateOuvertureReelle,heure,dateJugement,observations,cp,ce,statut}
 
         if(id){
             AppelOffreService.updateappelOffre(id, appelOffre).then((response) => {
@@ -153,6 +154,7 @@ const AddAppelOffreComponent = () => {
             setObjet(response.data.objet)
             settypeMarche(response.data.typeMarche)
             setEstimation(response.data.estimation)
+            setNbrseance(response.data.nbrseance)
             setCp(response.data.cp)
             setCe(response.data.ce)
             setPme(response.data.pme)
@@ -315,6 +317,17 @@ const AddAppelOffreComponent = () => {
                                         className = "form-control"
                                         value = {pme}
                                         onChange = {(e) => setPme(e.target.value)}
+                                        />
+                                </div>
+                                <div className = "form-group mb-2">
+                                    <label className = "form-label"> Nombre de Séances :</label>
+                                    <input
+                                        type = "number"
+                                        placeholder = "Enter nombre de séances"
+                                        name = "nbrseance"
+                                        className = "form-control"
+                                        value = {nbrseance}
+                                        onChange = {(e) => setNbrseance(e.target.value)}
                                         />
                                 </div>
 

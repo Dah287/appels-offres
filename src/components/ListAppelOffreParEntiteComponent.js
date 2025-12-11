@@ -2,6 +2,7 @@
 import React, {useState, useEffect} from 'react'
 import AppelOffreService from '../services/AppelOffreService'
 import { Link ,useHistory,useParams} from 'react-router-dom'
+import useAutoLogout from './useAutoLogout';
 const ListAppelOffreParEntiteComponent = () => {
 
 
@@ -61,7 +62,7 @@ const {entitee} = useParams();
 
       const history = useHistory();
 
-
+      useAutoLogout();
   return (
     
     <div className="container-fluid">
