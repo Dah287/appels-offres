@@ -46,8 +46,25 @@ public class AppelOffre {
     private String delai;
     private String statut;
     private String nbrmarche;
+    private Double nbrseance;
+    private Double nbravenant;
     // Getters et Setters
     // Getter pour cp
+    public Double getNbrseance() {
+        return nbrseance;
+    }
+
+    public void setNbrseance(Double nbrseance) {
+        this.nbrseance = nbrseance;
+    }
+    public Double getNbravenant() {
+        return nbravenant;
+    }
+
+    public void setNbravenant(Double nbrseance) {
+        this.nbravenant = nbrseance;
+    }
+
     public Double getCp() {
         return cp;
     }

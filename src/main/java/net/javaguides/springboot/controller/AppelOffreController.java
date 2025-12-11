@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @CrossOrigin("*")
@@ -57,6 +58,7 @@ public class AppelOffreController {
         updateappelOffre.setObjet(appelOffreDetails.getObjet());
         updateappelOffre.setTypeMarche(appelOffreDetails.getTypeMarche());
         updateappelOffre.setEstimation(appelOffreDetails.getEstimation());
+        updateappelOffre.setNbrseance(appelOffreDetails.getNbrseance());
         updateappelOffre.setCp(appelOffreDetails.getCp());
         updateappelOffre.setCe(appelOffreDetails.getCe());
         updateappelOffre.setPme(appelOffreDetails.getPme());
@@ -88,6 +90,7 @@ public class AppelOffreController {
                 .orElseThrow(() -> new ResourceNotFoundException("appelOffre not exist with id: " + id));
         updateappelOffre.setAttributaire(appelOffreDetails.getAttributaire());
         updateappelOffre.setMontantTTC(appelOffreDetails.getMontantTTC());
+        updateappelOffre.setNbravenant(appelOffreDetails.getNbravenant());
         updateappelOffre.setMarcheVise(appelOffreDetails.getMarcheVise());
         updateappelOffre.setNumeroVisa(appelOffreDetails.getNumeroVisa());
         updateappelOffre.setNbrmarche(appelOffreDetails.getNbrmarche());
@@ -211,49 +214,49 @@ public class AppelOffreController {
 
     }
 
+// testsetetetetetet
 
-    // dashbord
+    private static final Set<String> STATUTS_EXCLUS = Set.of("Definitivement", "Infructueux", "Annulé");
+
     @GetMapping("/dashboard")
     public List<Map<String, Object>> getDashboardData() {
         return appelOffreRepository.findAll().stream()
-                .collect(Collectors.groupingBy(AppelOffre::getEntite)) // Regroupe par entité
+                .collect(Collectors.groupingBy(AppelOffre::getEntite))
                 .entrySet().stream()
                 .map(entry -> {
                     Map<String, Object> row = new HashMap<>();
                     row.put("entite", entry.getKey());
 
-                    // Comptage des appels d'offres ALancer où getMoisPublicationPrevisionnelle() n'est pas null
+                    // Filtre réutilisable
+                    Predicate<AppelOffre> isNotExclu = a -> a.getStatut() == null || !STATUTS_EXCLUS.contains(a.getStatut());
+
                     long appelOffresALancer = entry.getValue().stream()
-                            .filter(a -> a.getMoisPublicationPrevisionnelle() != null &&
-                                    (a.getStatut() == null || !a.getStatut().equals("Definitivement")))
+                            .filter(a -> a.getMoisPublicationPrevisionnelle() != null)
+                            .filter(isNotExclu)
                             .count();
 
-                    // Comptage des appels d'offres lancés
                     long appelOffresLance = entry.getValue().stream()
-                            .filter(a -> a.getDateOuvertureReelle() != null && a.getDateJugement() == null &&
-                                    (a.getStatut() == null ))
+                            .filter(a -> a.getDateOuvertureReelle() != null && a.getDateJugement() == null)
+                            .filter(isNotExclu)
                             .count();
 
-                    // Comptage des appels d'offres transmis à la commission
                     long appelOffresTransmisCe = entry.getValue().stream()
-                            .filter(a -> a.getDatetransmisCe() != null && a.getDateOuvertureReelle() == null &&
-                                    (a.getStatut() == null || !a.getStatut().equals("Definitivement")))
+                            .filter(a -> a.getDatetransmisCe() != null && a.getDateOuvertureReelle() == null)
+                            .filter(isNotExclu)
                             .count();
 
-                    // Comptage des appels d'offres jugés
                     long appelOffresJuge = entry.getValue().stream()
-                            .filter(a -> a.getDateJugement() != null &&
-                                    (a.getStatut() == null || !a.getStatut().equals("Definitivement")))
+                            .filter(a -> a.getDateJugement() != null)
+                            .filter(isNotExclu)
                             .count();
 
-                    // Pour appelOffresEnCoursExamen, ajouter la logique nécessaire pour ce cas
-                    // Par exemple, si vous voulez filtrer les appels d'offres où aucune des dates n'est définie :
                     long appelOffresEnCoursExamen = entry.getValue().stream()
-                            .filter(a -> a.getDateOuvertureReelle() == null && a.getDatetransmisCe() == null && a.getDateJugement() == null &&
-                                    (a.getStatut() == null || !a.getStatut().equals("Definitivement")))
+                            .filter(a -> a.getDateOuvertureReelle() == null
+                                    && a.getDatetransmisCe() == null
+                                    && a.getDateJugement() == null)
+                            .filter(isNotExclu)
                             .count();
 
-                    // Ajoute les résultats dans la map
                     row.put("appelOffresALancer", appelOffresALancer);
                     row.put("appelOffresLance", appelOffresLance);
                     row.put("appelOffresTransmisCe", appelOffresTransmisCe);
@@ -265,6 +268,72 @@ public class AppelOffreController {
                 .collect(Collectors.toList());
     }
 
+    // dashbord
+//    @GetMapping("/dashboard")
+//    public List<Map<String, Object>> getDashboardData() {
+//        return appelOffreRepository.findAll().stream()
+//                .collect(Collectors.groupingBy(AppelOffre::getEntite)) // Regroupe par entité
+//                .entrySet().stream()
+//                .map(entry -> {
+//                    Map<String, Object> row = new HashMap<>();
+//                    row.put("entite", entry.getKey());
+//
+//                    // Comptage des appels d'offres ALancer où getMoisPublicationPrevisionnelle() n'est pas null
+//                    long appelOffresALancer = entry.getValue().stream()
+//                            .filter(a -> a.getMoisPublicationPrevisionnelle() != null &&
+//                                    (a.getStatut() == null || !a.getStatut().equals("Definitivement")))
+//                            .count();
+//
+//                    // Comptage des appels d'offres lancés
+//                    long appelOffresLance = entry.getValue().stream()
+//                            .filter(a -> a.getDateOuvertureReelle() != null && a.getDateJugement() == null &&
+//                                    (a.getStatut() == null ))
+//                            .count();
+//
+//                    // Comptage des appels d'offres transmis à la commission
+//                    long appelOffresTransmisCe = entry.getValue().stream()
+//                            .filter(a -> a.getDatetransmisCe() != null && a.getDateOuvertureReelle() == null &&
+//                                    (a.getStatut() == null || !a.getStatut().equals("Definitivement")))
+//                            .count();
+//
+//                    // Comptage des appels d'offres jugés
+//                    long appelOffresJuge = entry.getValue().stream()
+//                            .filter(a -> a.getDateJugement() != null &&
+//                                    (a.getStatut() == null || !a.getStatut().equals("Definitivement")))
+//                            .count();
+//
+//                    // Pour appelOffresEnCoursExamen, ajouter la logique nécessaire pour ce cas
+//                    // Par exemple, si vous voulez filtrer les appels d'offres où aucune des dates n'est définie :
+//                    long appelOffresEnCoursExamen = entry.getValue().stream()
+//                            .filter(a -> a.getDateOuvertureReelle() == null && a.getDatetransmisCe() == null && a.getDateJugement() == null &&
+//                                    (a.getStatut() == null || !a.getStatut().equals("Definitivement")))
+//                            .count();
+//                    //test test tes
+////                    long appelOffresInfructueuxRelance = entry.getValue().stream()
+////                            .filter(a -> a.getStatut().equals("Infructueux"))
+////                            .count();
+////
+////                    long appelOffresAnnuleRelance = entry.getValue().stream()
+////                            .filter(a -> a.getStatut().equals("Annulé"))
+////                            .count();
+////                    long appelOffresAnnuleDef = entry.getValue().stream()
+////                            .filter(a -> a.getStatut().equals("Definitivement"))
+////                            .count();
+//                    // Ajoute les résultats dans la map
+//                    row.put("appelOffresALancer", appelOffresALancer);
+//                    row.put("appelOffresLance", appelOffresLance);
+//                    row.put("appelOffresTransmisCe", appelOffresTransmisCe);
+//                    row.put("appelOffresJuge", appelOffresJuge);
+//                    row.put("appelOffresEnCoursExamen", appelOffresEnCoursExamen);
+////                    row.put("appelOffresInfructueuxRelance", appelOffresInfructueuxRelance);
+////                    row.put("appelOffresAnnuleRelance", appelOffresAnnuleRelance);
+////                    row.put("appelOffresAnnuleDef", appelOffresAnnuleDef);
+//
+//                    return row;
+//                })
+//                .collect(Collectors.toList());
+//    }
+
 
     @GetMapping("/dashboards")
     public List<Map<String, Object>> getDashboardData(@RequestParam(required = false) String entite) {
@@ -272,12 +341,18 @@ public class AppelOffreController {
 
         if (entite == null || entite.isEmpty()) {
             appelOffres = appelOffreRepository.findAll().stream()
-                    .filter(a ->
-                            (a.getStatut() == null || !a.getStatut().equals("Definitivement")))
+                    .filter(a -> a.getStatut() == null ||
+                            (!a.getStatut().equals("Definitivement") &&
+                                    !a.getStatut().equals("Infructueux") &&
+                                    !a.getStatut().equals("Annulé")))
                     .collect(Collectors.toList());
         } else {
             appelOffres = appelOffreRepository.findAll().stream()
-                    .filter(a -> a.getEntite().equals(entite) && (a.getStatut() == null || !a.getStatut().equals("Definitivement")))
+                    .filter(a -> a.getEntite().equals(entite) &&
+                            (a.getStatut() == null ||
+                                    (!a.getStatut().equals("Definitivement") &&
+                                            !a.getStatut().equals("Infructueux") &&
+                                            !a.getStatut().equals("Annulé"))))
                     .collect(Collectors.toList());
         }
 
@@ -288,6 +363,13 @@ public class AppelOffreController {
 
             long totalAppelOffres = appelOffres.size();
             long totalAppelOffresLance = appelOffres.stream().filter(a -> a.getDateOuvertureReelle() != null && a.getDateJugement() == null).count();
+
+            double totalNbrSeance = appelOffres.stream()
+                    .mapToDouble(a -> a.getNbrseance() != null ? a.getNbrseance() : 0.0)
+                    .sum();
+            double totalNbravenant = appelOffres.stream()
+                    .mapToDouble(a -> a.getNbravenant() != null ? a.getNbravenant() : 0.0)
+                    .sum();
             long totalAppelOffresTransmisCe = appelOffres.stream().filter(a -> a.getDatetransmisCe() != null && a.getDateOuvertureReelle() == null).count();
             long totalAppelOffresJuge = appelOffres.stream().filter(a -> a.getDateJugement() != null).count();
             long totalAppelOffresPme = appelOffres.stream().filter(a -> a.getPme() != null).count();
@@ -315,6 +397,8 @@ public class AppelOffreController {
             globalRow.put("appelOffresJuge", totalAppelOffresJuge);
             globalRow.put("appelOffresPme", totalAppelOffresPme);
             globalRow.put("appelOffresVisa", totalAppelOffresVisa);
+            globalRow.put("totalNbrSeance", totalNbrSeance);
+            globalRow.put("totalNbravenant", totalNbravenant);
             globalRow.put("appelOffresOds", totalAppelOffresOds);
             globalRow.put("appelOffresEnCoursExamen", totalAppelOffresEnCoursExamen);
             globalRow.put("totalsEstimationTotalAppelOffres", totalsEstimationTotalAppelOffres);
@@ -336,6 +420,12 @@ public class AppelOffreController {
                     long appelOffresLance = entry.getValue().stream().filter(a -> a.getDateOuvertureReelle() != null && a.getDateJugement() == null).count();
                     long appelOffresTransmisCe = entry.getValue().stream().filter(a -> a.getDatetransmisCe() != null && a.getDateOuvertureReelle() == null).count();
                     long appelOffresJuge = entry.getValue().stream().filter(a -> a.getDateJugement() != null).count();
+                    double totalNbrSeance = appelOffres.stream()
+                            .mapToDouble(a -> a.getNbrseance() != null ? a.getNbrseance() : 0.0)
+                            .sum();
+                    double totalNbravenant = appelOffres.stream()
+                            .mapToDouble(a -> a.getNbravenant() != null ? a.getNbravenant() : 0.0)
+                            .sum();
                     long appelOffresPme = entry.getValue().stream().filter(a -> a.getPme() != null).count();
                     long appelOffresVisa = entry.getValue().stream().filter(a -> a.getMarcheVise()!= null).count();
                     long appelOffresOds = entry.getValue().stream().filter(a -> a.getOds()!= null).count();
@@ -369,6 +459,8 @@ public class AppelOffreController {
                     row.put("totalsEstimationTotalJuge", totalsEstimationTotalJuge);
                     row.put("totalsEstimationTotalPme", totalsEstimationTotalPme);
                     row.put("totalsEstimationTotalVisa", totalsEstimationTotalVisa);
+                    row.put("totalNbrSeance", totalNbrSeance);
+                    row.put("totalNbravenant", totalNbravenant);
                     row.put("totalsEstimationTotalOds", totalsEstimationTotalVisa);
 
                     return row;
@@ -376,6 +468,89 @@ public class AppelOffreController {
                 .collect(Collectors.toList());
 
         // Ajouter la ligne de total global si l'entité n'est pas spécifiée
+        if (entite == null || entite.isEmpty()) {
+            result.add(0, globalRow);
+        }
+
+        return result;
+    }
+
+    @GetMapping("/dashboards/annules-infructueux")
+    public List<Map<String, Object>> getAnnulesInfructueuxParEntite(@RequestParam(required = false) String entite) {
+        List<AppelOffre> appelOffres;
+
+        // 🔹 Filtrer selon entité et statut
+        if (entite == null || entite.isEmpty()) {
+            appelOffres = appelOffreRepository.findAll().stream()
+                    .filter(a -> a.getStatut() == null ||
+                            (!a.getStatut().equalsIgnoreCase("Definitivement") ))
+                    .collect(Collectors.toList());
+        } else {
+            appelOffres = appelOffreRepository.findAll().stream()
+                    .filter(a -> a.getEntite().equals(entite) &&
+                            (a.getStatut() == null ||
+                                    (!a.getStatut().equalsIgnoreCase("Definitivement") )))
+                    .collect(Collectors.toList());
+        }
+
+        // =====================
+        // 🔸 Partie Totaux Globaux
+        // =====================
+        Map<String, Object> globalRow = new HashMap<>();
+        if (entite == null || entite.isEmpty()) {
+            globalRow.put("entite", "Total");
+
+
+            // ✅ Comptage des Annulés & Infructueux
+            long totalAnnules = appelOffres.stream()
+                    .filter(a -> "Annulé".equalsIgnoreCase(a.getStatut()))
+                    .count();
+
+            long totalInfructueux = appelOffres.stream()
+                    .filter(a -> "Infructueux".equalsIgnoreCase(a.getStatut()))
+                    .count();
+
+            // ✅ Conversion sécurisée pour NbrSeance et NbrAvenant
+
+
+            // 🔹 Ajouter toutes les données globales
+
+            globalRow.put("Total Annulés", totalAnnules);
+            globalRow.put("Total Infructueux", totalInfructueux);
+
+        }
+
+        // =====================
+        // 🔸 Regrouper par entité
+        // =====================
+        List<Map<String, Object>> result = appelOffres.stream()
+                .collect(Collectors.groupingBy(AppelOffre::getEntite))
+                .entrySet().stream()
+                .map(entry -> {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("entite", entry.getKey());
+
+
+
+                    long appelOffresAnnules = entry.getValue().stream()
+                            .filter(a -> "Annulé".equalsIgnoreCase(a.getStatut()))
+                            .count();
+
+                    long appelOffresInfructueux = entry.getValue().stream()
+                            .filter(a -> "Infructueux".equalsIgnoreCase(a.getStatut()))
+                            .count();
+
+
+                    // 🔹 Remplir la ligne
+
+                    row.put("Total Annulés", appelOffresAnnules);
+                    row.put("Total Infructueux", appelOffresInfructueux);
+
+                    return row;
+                })
+                .collect(Collectors.toList());
+
+        // 🔹 Ajouter la ligne globale en haut si pas d’entité spécifique
         if (entite == null || entite.isEmpty()) {
             result.add(0, globalRow);
         }
