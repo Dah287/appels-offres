@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const AppelOffre_BASE_REST_API_URL = "http://192.168.1.81:8080/api/v1/appelOffre";
+const AppelOffre_BASE_REST_API_URL = "http://localhost:8080/api/v1/appelOffre";
 
 
 
@@ -8,33 +8,42 @@ class AppelOffreService{
 
     
  
-getAllAppelOffre(entite,typeMarche,fitre,visa){
-       let url = AppelOffre_BASE_REST_API_URL +'?'; 
-       
-       if (entite && entite !== "ENTITE") {
-        
-        url += `entite=${entite}&`;
-      }
-      if (typeMarche && typeMarche !== "TYPE MARCHE") {
-        url += `typeMarche=${typeMarche}&`;
-      }
-      if (fitre && fitre !== "Filre") {
-        url += `fitre=${fitre}&`;
-      }
-      if (visa && visa !== "Visa") {
-        url += `visa=${visa}&`;
-      }
+getAllAppelOffre(entite, typeMarche, fitre, visa) {
 
 
-            // Supprime le dernier "&" de l'URL si présent
-            if (url.endsWith("&")) {
-                url = url.slice(0, -1);
-              }
 
-              console.log(url)
+  let url = AppelOffre_BASE_REST_API_URL + '?';
 
-      return  axios.get(url)
+  if (entite && entite !== "ENTITE") {
+    url += `entite=${encodeURIComponent(entite)}&`;
+  }
+
+  if (typeMarche && typeMarche !== "TYPE MARCHE") {
+    url += `typeMarche=${encodeURIComponent(typeMarche)}&`;
+  }
+
+  if (fitre && fitre !== "Filre") {
+    url += `fitre=${encodeURIComponent(fitre)}&`;
+  }
+
+  if (visa && visa !== "Visa") {
+    url += `visa=${encodeURIComponent(visa)}&`;
+  }
+
+  if (url.endsWith("&")) {
+    url = url.slice(0, -1);
+  }
+
+  console.log(url);
+
+  return axios.get(url, {
+    headers: {
+      exercice: sessionStorage.getItem("exercice")
+    }
+  });
 }
+
+
 
 createAppelOffre(appelOffre){
     return axios.post(AppelOffre_BASE_REST_API_URL,appelOffre)
@@ -57,17 +66,29 @@ deleteappelOffre(appelOffreId){
 }
 getDashboard(entite) {
   return axios.get(AppelOffre_BASE_REST_API_URL + '/dashboards', {
-      params: { entite }
+    params: { entite },
+    headers: {
+      exercice: sessionStorage.getItem("exercice")
+    }
   });
 }
+
 getDashboard1(entite) {
   return axios.get(AppelOffre_BASE_REST_API_URL + '/dashboards/annules-infructueux', {
-      params: { entite }
+      params: { entite },
+    headers: {
+      exercice: sessionStorage.getItem("exercice")
+    }
   });
 }
-getdashboard(){
-   return axios.get(AppelOffre_BASE_REST_API_URL + '/dashboard');
+getdashboard() {
+  return axios.get(AppelOffre_BASE_REST_API_URL + '/dashboard', {
+    headers: {
+      exercice: sessionStorage.getItem("exercice")
+    }
+  });
 }
+
 //
 login(user){
     return axios.post(AppelOffre_BASE_REST_API_URL + '/login', user);

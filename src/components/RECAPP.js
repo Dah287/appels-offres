@@ -374,7 +374,8 @@ const deleteappelOffre = (appelOffreId) => {
     </tr>
   </thead>
   <tbody>
-  {appelOffre
+    {appelOffre && appelOffre.length > 0 ? (
+  appelOffre
   .sort((a, b) => {
     // En dernier les "Résilier"
     if (a.delai === "Résilier" && b.delai !== "Résilier") return 1;
@@ -465,7 +466,14 @@ const deleteappelOffre = (appelOffreId) => {
 
           </td>
         </tr>
-      ))}
+      ))
+  ) : (
+    <tr>
+      <td colSpan="13" style={{ textAlign: "center", padding: "20px", fontStyle: "italic", color: "#888" }}>
+        Aucun Marche trouvé.
+      </td>
+    </tr>
+  )}
   </tbody>
 </table>
 

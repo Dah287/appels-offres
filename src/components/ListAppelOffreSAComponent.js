@@ -380,7 +380,9 @@ const deleteappelOffre = (appelOffreId) => {
     </tr>
   </thead>
   <tbody>
-  {appelOffre
+  {appelOffre && appelOffre.length > 0 ? (
+  
+  appelOffre
   .sort((a, b) => {
     // Placer les "Annulé" ou "Infructueux" à la fin
     const statutA = a.statut;
@@ -481,7 +483,14 @@ const deleteappelOffre = (appelOffreId) => {
                    
                    </td>
         </tr>
-      ))}
+      ))
+  ) : (
+    <tr>
+      <td colSpan="13" style={{ textAlign: "center", padding: "20px", fontStyle: "italic", color: "#888" }}>
+        Aucun appel d’offre trouvé.
+      </td>
+    </tr>
+  )}
   </tbody>
 </table>
 
