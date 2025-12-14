@@ -48,6 +48,7 @@ public class AppelOffre {
     private String nbrmarche;
     private Double nbrseance;
     private Double nbravenant;
+    private String exercice;
     // Getters et Setters
     // Getter pour cp
     public Double getNbrseance() {

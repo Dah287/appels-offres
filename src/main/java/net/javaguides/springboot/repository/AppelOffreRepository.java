@@ -86,4 +86,54 @@ public interface AppelOffreRepository extends JpaRepository<AppelOffre,Long> {
     List<AppelOffre> findByEntiteAndDatetransmisCeIsNotNullAndDateOuvertureReelleIsNullAndStatutNull(String entite);
     List<AppelOffre> findByTypeMarcheAndDatetransmisCeIsNotNullAndDateOuvertureReelleIsNullAndStatutNull(String typeMarche);
     List<AppelOffre> findByDatetransmisCeIsNotNullAndDateOuvertureReelleIsNullAndStatutNull();
+
+
+
+
+    // ====== Cas "ouv" ======
+    List<AppelOffre> findByEntiteAndTypeMarcheAndDateOuvertureReelleIsNotNullAndDateJugementIsNullAndStatutIsNullAndExercice(String entite, String typeMarche, String exercice);
+    List<AppelOffre> findByEntiteAndDateOuvertureReelleIsNotNullAndDateJugementIsNullAndStatutIsNullAndExercice(String entite, String exercice);
+    List<AppelOffre> findByTypeMarcheAndDateOuvertureReelleIsNotNullAndDateJugementIsNullAndStatutIsNullAndExercice(String typeMarche, String exercice);
+    List<AppelOffre> findByDateOuvertureReelleIsNotNullAndDateJugementIsNullAndStatutIsNullAndExercice(String exercice);
+
+    // ====== Cas "ce" ======
+    List<AppelOffre> findByEntiteAndTypeMarcheAndDatetransmisCeIsNotNullAndDateOuvertureReelleIsNullAndStatutIsNullAndExercice(String entite, String typeMarche, String exercice);
+    List<AppelOffre> findByEntiteAndDatetransmisCeIsNotNullAndDateOuvertureReelleIsNullAndStatutIsNullAndExercice(String entite, String exercice);
+    List<AppelOffre> findByTypeMarcheAndDatetransmisCeIsNotNullAndDateOuvertureReelleIsNullAndStatutIsNullAndExercice(String typeMarche, String exercice);
+    List<AppelOffre> findByDatetransmisCeIsNotNullAndDateOuvertureReelleIsNullAndStatutIsNullAndExercice(String exercice);
+
+    // ====== Cas "jug" ======
+    List<AppelOffre> findByEntiteAndTypeMarcheAndDateJugementIsNotNullAndStatutIsNullAndExercice(String entite, String typeMarche, String exercice);
+    List<AppelOffre> findByEntiteAndDateJugementIsNotNullAndStatutIsNullAndExercice(String entite, String exercice);
+    List<AppelOffre> findByTypeMarcheAndDateJugementIsNotNullAndStatutIsNullAndExercice(String typeMarche, String exercice);
+    List<AppelOffre> findByDateJugementIsNotNullAndStatutIsNullAndExercice(String exercice);
+
+    // ====== Cas "pre" ======
+    List<AppelOffre> findByEntiteAndTypeMarcheAndDatetransmisCeIsNullAndStatutIsNullAndExercice(String entite, String typeMarche, String exercice);
+    List<AppelOffre> findByEntiteAndDatetransmisCeIsNullAndStatutIsNullAndExercice(String entite, String exercice);
+    List<AppelOffre> findByTypeMarcheAndDatetransmisCeIsNullAndStatutIsNullAndExercice(String typeMarche, String exercice);
+    List<AppelOffre> findByDatetransmisCeIsNullAndStatutIsNullAndExercice(String exercice);
+
+    // ====== Cas "vise" ======
+    List<AppelOffre> findByEntiteAndTypeMarcheAndMarcheViseIsNotNullAndStatutIsNullAndExercice(String entite, String typeMarche, String exercice);
+    List<AppelOffre> findByEntiteAndMarcheViseIsNotNullAndStatutIsNullAndExercice(String entite, String exercice);
+    List<AppelOffre> findByTypeMarcheAndMarcheViseIsNotNullAndStatutIsNullAndExercice(String typeMarche, String exercice);
+    List<AppelOffre> findByMarcheViseIsNotNullAndStatutIsNullAndExercice(String exercice);
+
+    // ====== Cas "nonvise" ======
+    List<AppelOffre> findByEntiteAndTypeMarcheAndMarcheViseIsNullAndStatutIsNullAndExercice(String entite, String typeMarche, String exercice);
+    List<AppelOffre> findByEntiteAndMarcheViseIsNullAndStatutIsNullAndExercice(String entite, String exercice);
+    List<AppelOffre> findByTypeMarcheAndMarcheViseIsNullAndStatutIsNullAndExercice(String typeMarche, String exercice);
+    List<AppelOffre> findByMarcheViseIsNullAndStatutIsNullAndExercice(String exercice);
+
+    // ====== Cas par défaut ======
+    List<AppelOffre> findByEntiteAndTypeMarcheAndStatutIsNullAndExercice(String entite, String typeMarche, String exercice);
+    List<AppelOffre> findByEntiteAndStatutIsNullAndExercice(String entite, String exercice);
+    List<AppelOffre> findByTypeMarcheAndStatutIsNullAndExercice(String typeMarche, String exercice);
+    List<AppelOffre> findByStatutIsNullAndExercice(String exercice);
+
+    //
+
+    // Dans AppelOffreRepository.java
+    List<AppelOffre> findByExercice(String exercice);
 }
