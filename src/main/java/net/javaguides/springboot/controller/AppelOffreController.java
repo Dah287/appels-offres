@@ -38,10 +38,14 @@ public class AppelOffreController {
     @PostMapping
     public AppelOffre createappelOffre(@RequestBody AppelOffre appelOffre) {
         // Si exercice non défini, mettre l'année actuelle
-        if (appelOffre.getExercice() == null || appelOffre.getExercice().isEmpty()) {
-            int currentYear = java.time.Year.now().getValue();
-            appelOffre.setExercice(String.valueOf(currentYear));
-        }
+//        if (appelOffre.getExercice() == null || appelOffre.getExercice().isEmpty()) {
+//            int currentYear = java.time.Year.now().getValue();
+//            appelOffre.setExercice(String.valueOf(currentYear));
+//        }
+
+
+        // Affecter l'année 2026 pour tous les nouveaux AO
+        //appelOffre.setExercice("2026");
 
         return appelOffreRepository.save(appelOffre);
     }
@@ -60,6 +64,7 @@ public class AppelOffreController {
         AppelOffre updateappelOffre = appelOffreRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("appelOffre not exist with id: " + id));
         updateappelOffre.setNumero(appelOffreDetails.getNumero());
+        updateappelOffre.setExercice(appelOffreDetails.getExercice());
         updateappelOffre.setEntite(appelOffreDetails.getEntite());
         updateappelOffre.setObjet(appelOffreDetails.getObjet());
         updateappelOffre.setTypeMarche(appelOffreDetails.getTypeMarche());
