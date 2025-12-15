@@ -15,6 +15,7 @@ const AddAppelOffreComponent = () => {
     const [pme, setPme] = useState('')
     const [statut, setStatut] = useState(null)
     const [nbrseance, setNbrseance] = useState('')
+    const [exercice, setExercice] = useState('')
     // 
     const [moisPublicationPrevisionnelle	, setMoisPublicationPrevisionnelle] = useState('')
     const [dateOuverturePrevisionnelle	, setDateOuverturePrevisionnelle] = useState('')
@@ -91,8 +92,11 @@ const AddAppelOffreComponent = () => {
         }else if(!moisPublicationPrevisionnelle){
             alert("Veuillez remplir  Date Ouverture Previsionnelle  !");
             return;
-        }
-        const appelOffre = {numero, entite, objet,typeMarche,estimation,nbrseance,pme,moisPublicationPrevisionnelle,dateOuverturePrevisionnelle,datetransmisCe,dateobservationMc,dateOuvertureReelle,heure,dateJugement,observations,cp,ce,statut}
+        }else if (!exercice) {
+  alert("Veuillez sélectionner un exercice !");
+  return;
+}
+        const appelOffre = {numero, exercice, entite, objet,typeMarche,estimation,nbrseance,pme,moisPublicationPrevisionnelle,dateOuverturePrevisionnelle,datetransmisCe,dateobservationMc,dateOuvertureReelle,heure,dateJugement,observations,cp,ce,statut}
 
         if(id){
             AppelOffreService.updateappelOffre(id, appelOffre).then((response) => {
@@ -150,6 +154,7 @@ const AddAppelOffreComponent = () => {
 
         AppelOffreService.getappelOffreById(id).then((response) =>{
             setNumero(response.data.numero)
+            setExercice(response.data.exercice)
             setEntite(response.data.entite)
             setObjet(response.data.objet)
             settypeMarche(response.data.typeMarche)
@@ -206,6 +211,22 @@ const AddAppelOffreComponent = () => {
                                         onChange = {(e) => setNumero(e.target.value)}
                                         />
                                 </div>
+                                <div className="form-group mb-2">
+  <label className="form-label"> Exercice :</label>
+  <select
+    className="form-select"
+    value={exercice}
+    onChange={(e) => setExercice(e.target.value)}
+    required
+  >
+    <option value="">Sélectionner l'exercice</option>
+    <option value="2026">2026</option>
+      <option value="2025">2025</option>
+          <option value="2024">2024</option>
+              <option value="2023">2023</option>
+    {/* Ajoutez d'autres années si nécessaire */}
+  </select>
+</div>
 
                                 <div className = "form-group mb-2">
                                     <label className = "form-label"> Entité :</label>

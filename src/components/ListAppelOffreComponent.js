@@ -382,7 +382,7 @@ useAutoLogout();
                             </div>
                         </th>
                         <th style={{ textAlign: "center", width: "50px" }}>PME</th>
-                        <th style={{ textAlign: "center", width: "80px" }}>Publication Prev</th>
+                        <th style={{ textAlign: "center", width: "75px" }}>Publication Prev</th>
                         <th style={{ textAlign: "center", width: "80px" }}>Transmis Commission</th>
                         <th style={{ textAlign: "center", width: "80px" }}>Observation Commission</th>
                        
@@ -390,11 +390,11 @@ useAutoLogout();
                             <div>Ouverture Reelle</div>
                             <div style={{ borderTop: "1px solid black", paddingTop: "2px", marginTop: "2px" }}>Heure</div>
                         </th>
-                        <th style={{ textAlign: "center", width: "80px" }}>Jugement</th>
-                        <th style={{ textAlign: "center", width: "92px" }}>Observations</th>
+                        <th style={{ textAlign: "center", width: "70px" }}>Jugement</th>
+                        <th style={{ textAlign: "center", width: "105px" }}>Observations</th>
                         <th className="cccc numero-colonne" style={{ 
                             textAlign: "center", 
-                            width: "85px",
+                            width: "90px",
                             position: 'sticky',
                             right: 0,
                             zIndex: 110,

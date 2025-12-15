@@ -4,7 +4,7 @@ import useAutoLogout from './useAutoLogout';
 import './HeaderComponent.css';
 
 // 🔹 Liste des exercices disponibles (modifiable selon besoin)
-const EXERCICES = ['2023', '2024', '2025', '2026', '2027'];
+const EXERCICES = ['2026', '2025', '2024', '2023'];
 
 const HeaderComponent = () => {
   const user = JSON.parse(sessionStorage.getItem('user'));
