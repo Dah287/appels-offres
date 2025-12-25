@@ -7,30 +7,38 @@ const LoginComponent = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [exercice, setExercice] = useState(""); // ← nouvel état
-  const [showExerciceSelector, setShowExerciceSelector] = useState(false); // ← pour afficher le sélecteur
-  const [loginResponse, setLoginResponse] = useState(null); // ← stocker la réponse du login
+  const [exercice, setExercice] = useState("");
+  const [showExerciceSelector, setShowExerciceSelector] = useState(false);
+  const [loginData, setLoginData] = useState(null); // Contiendra { token, user }
   const history = useHistory();
 
+  // 1. Appel au nouvel API de Login
   const loginf = (e) => {
     e.preventDefault();
     const credentials = { username, password };
 
     AppelOffreService.login(credentials)
       .then((response) => {
-        const role = response.data;
-        if (role === "no") {
-          setMessage("Nom d’utilisateur ou mot de passe incorrect.");
+        // La réponse est maintenant un objet : { token, user: { id, role, entite... } }
+        console.log("reponse ----------------->",response.data)
+        const { token, user } = response.data;
+
+        if (!token) {
+          setMessage("Erreur d'authentification.");
         } else {
-          // ✅ Login réussi → montrer le sélecteur d'exercice
-          setLoginResponse({ username, role });
+          // ✅ Login réussi : On stocke les données temporairement
+          setLoginData({ token, user });
           setShowExerciceSelector(true);
           setMessage("");
         }
       })
-      .catch(() => setMessage("Erreur de connexion. Veuillez réessayer."));
+      .catch((error) => {
+        console.error("Login error", error);
+        setMessage("Nom d’utilisateur ou mot de passe incorrect.");
+      });
   };
 
+  // 2. Validation finale après choix de l'exercice
   const handleExerciceSubmit = (e) => {
     e.preventDefault();
     if (!exercice.trim()) {
@@ -38,40 +46,51 @@ const LoginComponent = () => {
       return;
     }
 
-    // 🔑 Stocker l'exercice dans sessionStorage
+    const { token, user } = loginData;
+
+    // 🔑 Stockage des informations essentielles
+    sessionStorage.setItem("token", token); // Stockage du JWT
     sessionStorage.setItem("exercice", exercice.trim());
 
-    const { username, role } = loginResponse;
-
-    // Définir les infos utilisateur
-    let user;
-    if (role === "admin") {
-      user = { username, role, nom: "Mr. ANDALOUSSI" };
+    // 🔄 Mapping des rôles et Redirection
+    // ADMIN par ROLE_ADMIN et sous admin par ROLE_USER
+    if (user.role === "ROLE_ADMIN") {
+      //user.displayName = "Mr. ANDALOUSSI"; // Votre logique de nommage
+      sessionStorage.setItem("user", JSON.stringify(user));
       history.push("/appelOffres");
-    } else if (role === "sous admin") {
-      user = { username, role, nom: "Mr. KAFIH" };
+    } 
+    else if (user.role === "ROLE_USER") {
+    //  user.displayName = "Mr. KAFIH";
+      sessionStorage.setItem("user", JSON.stringify(user));
       history.push("/ListSA");
-    } else {
-      user = { username, role, nom: role };
-      history.push(`/ListAppelOffreParEntite/${role}`);
+    } 
+
+      else if (user.role === "ROLE_SI") {
+  //    user.displayName = "SI"; // Votre logique de nommage
+      sessionStorage.setItem("user", JSON.stringify(user));
+      history.push("/appelOffres");
+    } 
+    else {
+      // Pour les autres entités
+     // user.displayName = user.username;
+      sessionStorage.setItem("user", JSON.stringify(user));
+      history.push(`/ListAppelOffreParEntite/${user.entite}`);
     }
 
-    sessionStorage.setItem("user", JSON.stringify(user));
-        window.location.reload(); // ou utiliser un contexte pour recharger proprement
+    window.location.reload(); 
   };
 
-  // Si on doit choisir l'exercice → afficher le sélecteur
+  // --- Rendu du sélecteur d'exercice ---
   if (showExerciceSelector) {
     return (
       <div className="login-page">
         <div className="login-card" style={{ maxWidth: "400px" }}>
           <div className="login-header text-center mb-4">
             <h4 className="fw-bold text-success">Sélection de l'exercice</h4>
-            <p className="text-muted">Veuillez choisir l’année d’exercice</p>
+            <p className="text-muted">Choisissez l’année de travail</p>
           </div>
-
           <form onSubmit={handleExerciceSubmit}>
-            <div className="form-group" style={{ marginBottom: "1rem" }}>
+            <div className="form-group mb-3">
               <label className="fw-semibold">Année d’exercice</label>
               <select
                 className="form-control modern-input"
@@ -80,77 +99,51 @@ const LoginComponent = () => {
                 required
               >
                 <option value="">-- Sélectionnez --</option>
-                {/* Tu peux aussi charger dynamiquement depuis une API */}
-                <option value="2026">2026</option>
+                 <option value="2026">2026</option>
                 <option value="2025">2025</option>
                 <option value="2024">2024</option>
-                <option value="2023">2023</option>
               </select>
             </div>
-
             {message && <div className="alert alert-danger py-2 text-center">{message}</div>}
-
-            <button type="submit" className="btn-modern w-100 mt-3">
-              Confirmer
-            </button>
-            <button
-              type="button"
-              className="btn btn-outline-secondary w-100 mt-2"
-              onClick={() => {
-                setShowExerciceSelector(false);
-                setLoginResponse(null);
-                setMessage("");
-              }}
-            >
-              ← Retour à la connexion
-            </button>
+            <button type="submit" className="btn-modern w-100 mt-3">Confirmer</button>
           </form>
         </div>
       </div>
     );
   }
 
-  // Affichage normal de la page de login
+  // --- Rendu du formulaire de Login ---
   return (
     <div className="login-page">
       <div className="login-card">
         <div className="login-header text-center mb-4">
-          <img src="/ormvad_1.jpg" alt="Logo ORMAVD" className="login-logo" />
-          <h3 className="fw-bold text-success mt-3">Portail ORMAVD</h3>
+          <img src="/ormvad_1.jpg" alt="Logo ORMVAD" className="login-logo" style={{width: '100px'}} />
+          <h3 className="fw-bold text-success mt-3">Portail ORMVAD</h3>
           <p className="text-muted">Connectez-vous pour accéder à votre espace</p>
         </div>
-
         <form onSubmit={loginf}>
-          <div className="form-group" style={{ marginBottom: "1rem" }}>
+          <div className="form-group mb-3">
             <label className="fw-semibold">Nom d'utilisateur</label>
             <input
               type="text"
               className="form-control modern-input"
-              placeholder="Entrez votre nom d'utilisateur"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              autoFocus
             />
           </div>
-
-          <div className="form-group" style={{ marginBottom: "1rem" }}>
+          <div className="form-group mb-3">
             <label className="fw-semibold">Mot de passe</label>
             <input
               type="password"
               className="form-control modern-input"
-              placeholder="Entrez votre mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
-
           {message && <div className="alert alert-danger py-2 text-center">{message}</div>}
-
-          <button type="submit" className="btn-modern w-100 mt-3">
-            Se connecter
-          </button>
+          <button type="submit" className="btn-modern w-100 mt-3">Se connecter</button>
         </form>
       </div>
     </div>

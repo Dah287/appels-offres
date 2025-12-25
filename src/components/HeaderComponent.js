@@ -1,225 +1,137 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
+import { LogOut, Calendar, User, ChevronDown, Bell } from 'lucide-react'; // Icônes modernes
 import useAutoLogout from './useAutoLogout';
-import './HeaderComponent.css';
 
-// 🔹 Liste des exercices disponibles (modifiable selon besoin)
 const EXERCICES = ['2026', '2025', '2024', '2023'];
 
 const HeaderComponent = () => {
   const user = JSON.parse(sessionStorage.getItem('user'));
   const history = useHistory();
   const location = useLocation();
-
   const [exercice, setExercice] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
-  // Charger l'exercice au montage
   useEffect(() => {
     const stored = sessionStorage.getItem('exercice');
     if (stored && EXERCICES.includes(stored)) {
       setExercice(stored);
     } else {
-      // Définir l'année courante si disponible, sinon la première de la liste
       const currentYear = new Date().getFullYear().toString();
-      const defaultExercice = EXERCICES.includes(currentYear) ? currentYear : EXERCICES[EXERCICES.length - 1];
-      setExercice(defaultExercice);
-      sessionStorage.setItem('exercice', defaultExercice);
+      const defaultEx = EXERCICES.includes(currentYear) ? currentYear : EXERCICES[0];
+      setExercice(defaultEx);
+      sessionStorage.setItem('exercice', defaultEx);
     }
   }, []);
 
   const handleLogout = () => {
-    sessionStorage.removeItem('user');
+    sessionStorage.clear(); 
     history.push('/login');
+    window.location.reload();
   };
 
-  const handleExerciceChange = (e) => {
-    const newExercice = e.target.value;
-    setExercice(newExercice);
-    sessionStorage.setItem('exercice', newExercice);
-    setIsEditing(false);
-    // ⚠️ Optionnel : recharger les données ou forcer le refresh
-    window.location.reload(); // ou utiliser un contexte pour recharger proprement
+  const navLinks = {
+    ROLE_SI: [
+      { to: "/dashboard", label: "Dashboard" },
+      { to: "/appelOffres", label: "Appels d'Offres" },
+      { to: "/recapp", label: "Marchés" },
+      { to: "/bande-commandes", label: "BC" },
+      { to: "/admin/users", label: "Utilisateurs" },
+    ],
+    ROLE_ADMIN: [
+      { to: "/dashboard", label: "Dashboard" },
+      { to: "/appelOffres", label: "Appels d'Offres" },
+      { to: "/recapp", label: "Marchés" },
+    ],
+    ROLE_USER: [
+      { to: "/dashboard", label: "Dashboard" },
+      { to: "/ListSA", label: "Suivi AO" },
+    ]
   };
 
-  const startEditing = () => {
-    setIsEditing(true);
-  };
-
-  const cancelEditing = () => {
-    setIsEditing(false);
-  };
-
-  useAutoLogout();
-
-  const showExercice = user && location.pathname !== '/login';
+  const currentLinks = user ? navLinks[user.role] || [] : [];
 
   return (
-    <header
-      className="shadow-sm"
-      style={{
-        background: 'linear-gradient(90deg, #2e7d32, #4caf50)',
-        color: 'white',
-        position: 'sticky',
-        top: 0,
-        zIndex: 1000,
-      }}
-    >
-      <nav className="navbar navbar-expand-md px-4 py-2 d-flex justify-content-between align-items-center">
-        {/* === Bloc logos et titre === */}
-        <div className="d-flex flex-column align-items-start">
-          <div className="d-flex align-items-center gap-3 brand-section">
-            <a href="#" className="navbar-brand d-flex align-items-center gap-2">
-              <img
-                src="/ormvad_1.jpg"
-                alt="Logo ORMAVD"
-                style={{
-                  width: 42,
-                  height: 42,
-                  border: '2px solid #fff',
-                  borderRadius: '10px',
-                }}
-              />
-              <span className="fw-bold fs-5 text-white">Suivi des Appels d'Offres</span>
-            </a>
+    <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md shadow-sm">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        
+        {/* Logo & Titre */}
+        <div className="flex items-center gap-4">
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg group-hover:scale-105 transition-transform">
+              <img src="/ormvad_1.jpg" alt="Logo" className="rounded-lg object-cover w-full h-full" />
+            </div>
+            <span className="hidden lg:block font-bold text-slate-800 text-lg tracking-tight">
+              Marchés <span className="text-green-600">Publics</span>
+            </span>
+          </Link>
 
-            <img
-              src="/MAPDEFF.png"
-              alt="Logo MAPDEFF"
-              style={{
-                width: 48,
-                height: 42,
-                borderRadius: '4px',
-              }}
-            />
-          </div>
-
-          {/* === Affichage ou sélection de l'exercice === */}
-          {showExercice && (
-            <div className="mt-1 d-flex align-items-center" style={{ fontSize: '0.95rem' }}>
-              <span className="text-white opacity-90 me-2">Exercice :</span>
+          {/* Sélecteur d'exercice stylisé */}
+          {user && location.pathname !== '/login' && (
+            <div className="ml-4 flex items-center bg-slate-100 rounded-full px-3 py-1 border border-slate-200">
+              <Calendar size={14} className="text-slate-500 mr-2" />
               {isEditing ? (
-                <div className="d-flex align-items-center gap-1">
-                  <select
-                    value={exercice}
-                    onChange={handleExerciceChange}
-                    onBlur={cancelEditing}
-                    autoFocus
-                    className="form-select form-select-sm"
-                    style={{
-                      width: '90px',
-                      fontSize: '0.95rem',
-                      fontWeight: 'bold',
-                      color: '#1b5e20',
-                      backgroundColor: '#e8f5e9',
-                      border: '1px solid #a5d6a7',
-                      borderRadius: '5px',
-                      padding: '3px 8px',
-                    }}
-                  >
-                    {EXERCICES.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    onClick={cancelEditing}
-                    className="btn btn-outline-light btn-sm py-0 px-1 ms-1"
-                    style={{ borderRadius: '4px' }}
-                    title="Annuler"
-                  >
-                    ✕
-                  </button>
-                </div>
+                <select 
+                  className="bg-transparent text-sm font-semibold outline-none"
+                  value={exercice}
+                  onChange={(e) => {
+                    sessionStorage.setItem('exercice', e.target.value);
+                    window.location.reload();
+                  }}
+                  onBlur={() => setIsEditing(false)}
+                  autoFocus
+                >
+                  {EXERCICES.map(y => <option key={y} value={y}>{y}</option>)}
+                </select>
               ) : (
-                <div className="d-flex align-items-center">
-                  <strong className="text-white" style={{ fontSize: '1rem' }}>
-                    {exercice}
-                  </strong>
-                  <button
-                    onClick={startEditing}
-                    className="btn btn-link p-1 ms-2"
-                    style={{
-                      color: '#e0f2e9',
-                      textDecoration: 'none',
-                      fontSize: '0.9rem',
-                    }}
-                    title="Modifier l'exercice"
-                  >
-                    ✏️
-                  </button>
-                </div>
+                <button onClick={() => setIsEditing(true)} className="text-sm font-semibold text-slate-700 hover:text-green-600 transition-colors">
+                  {exercice}
+                </button>
               )}
             </div>
           )}
         </div>
 
-        {/* === Liens de navigation === */}
-        {user && location.pathname !== '/login' && (
-          <div className="d-flex align-items-center gap-2 flex-wrap justify-content-center">
-            {user.role === 'admin' && (
-              <>
-                <Link className="btn-nav" to="/dashboard">RECAP AO</Link>
-                <Link className="btn-nav" to="/appelOffres">Suivi des Appels d'Offres</Link>
-                <Link className="btn-nav" to="/recapp">Exécution des Marchés</Link>
-                <Link className="btn-nav" to="/bande-commandes">Suivi des BC à lancer</Link>
-                <Link className="btn-nav" to="/excution-bandecommande">Exécution des BC</Link>
-                <Link className="btn-nav" to="/TableauBord">RECAP BC</Link>
-              </>
-            )}
+        {/* Navigation Centrale */}
+        <nav className="hidden md:flex items-center gap-1">
+          {currentLinks.map((link) => (
+            <Link 
+              key={link.to} 
+              to={link.to}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                location.pathname === link.to 
+                ? 'bg-green-50 text-green-700' 
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
-            {user.role === 'sous admin' && (
-              <>
-                <Link className="btn-nav" to="/dashboard">RECAP</Link>
-                <Link className="btn-nav" to="/ListSA">Liste des Appels d'Offres</Link>
-                <Link className="btn-nav" to="/recapp">Suivi de Visa</Link>
-              </>
-            )}
-          </div>
-        )}
-
-        {/* === Section utilisateur === */}
-        <div className="d-flex align-items-center gap-3">
+        {/* Profil & Logout */}
+        <div className="flex items-center gap-3 border-l pl-4 border-slate-200">
           {user ? (
-            <>
-              <div className="d-flex align-items-center gap-2 user-section">
-                <div
-                  style={{
-                    width: 35,
-                    height: 35,
-                    backgroundColor: '#ffffff33',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 'bold',
-                    color: '#fff',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  {user.nom?.charAt(0) || 'U'}
-                </div>
-                <span className="fw-semibold">{user.nom}</span>
+            <div className="flex items-center gap-4">
+              <div className="hidden sm:flex flex-col items-end">
+                <span className="text-sm font-bold text-slate-800">{user.nom}</span>
+                <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">{user.role?.replace('ROLE_', '')}</span>
               </div>
-              <button
+              <button 
                 onClick={handleLogout}
-                className="btn btn-outline-light btn-sm px-3"
-                style={{
-                  borderRadius: '20px',
-                  transition: 'all 0.3s ease',
-                }}
+                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
+                title="Déconnexion"
               >
-                Déconnexion
+                <LogOut size={20} />
               </button>
-            </>
+            </div>
           ) : (
-            <a href="/login" className="btn btn-outline-light btn-sm">
+            <Link to="/login" className="bg-green-600 text-white px-5 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition-all shadow-md">
               Connexion
-            </a>
+            </Link>
           )}
         </div>
-      </nav>
+      </div>
     </header>
   );
 };

@@ -20,7 +20,7 @@ const ListBandeCommandeComponent = () => {
         totalEnCours: 0,
 
     });
-    const currentYear = 2025;
+    const currentYear = sessionStorage.getItem("exercice");;
     const history = useHistory();
 
     useEffect(() => {
@@ -159,7 +159,8 @@ const ListBandeCommandeComponent = () => {
                             <option value="DDA">DDA</option>
                             <option value="DRH">DRH</option>
                             <option value="SAICG">SAICG</option>
-                            <option value="SMG">SMG</option>
+                                                                    <option value="SMG">SMG</option>
+                                        <option value="BJC">BJC</option>
                         </select>
                     </div>
                 </div>
@@ -237,11 +238,19 @@ const ListBandeCommandeComponent = () => {
                             <th style={{ textAlign: "center" }}>Attributaire</th>
                           
                             <th style={{ textAlign: "center" }}>Observations</th>
-                            <th className='numero-colonne'>Actions</th>
+                            <th className='numero-colonne' style={{width: "200px"}}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {bandeCommandes
+                          {bandeCommandes.length === 0 ? (
+    <tr>
+      <td colSpan="11" style={{ textAlign: "center", fontWeight: "bold" }}>
+        Aucun bon de commande trouvé
+      </td>
+    </tr>
+  ) : (
+                        
+                        bandeCommandes
                             .sort((a, b) => {
                                 if (a.dateJugement && !b.dateJugement) return -1;
                                 if (!a.dateJugement && b.dateJugement) return 1;
@@ -280,18 +289,33 @@ const ListBandeCommandeComponent = () => {
                                         <Link 
                                             to={`/edit-bandecommande/${bc.id}`} 
                                             className="btn btn-info btn-sm"
+                                                          style={{                
+                                                            fontSize: "14px",
+                                                            width: "70px",
+                                                            paddingLeft : "1px",
+                                                            paddingRight:"1px"
+                                                        
+                                                        }}
                                         >
                                             Modifier
                                         </Link>
                                         <button
                                             onClick={() => deleteBandeCommande(bc.id)}
                                             className="btn btn-danger btn-sm ms-2"
+                                                          style={{
+                
+                                                        fontSize: "14px",
+                                                        width: "80px",
+                                                        paddingLeft : "1px",
+                                                        paddingRight:"1px"
+                                                    
+                                                    }}
                                         >
                                             Supprimer
                                         </button>
                                     </td>
                                 </tr>
-                            ))}
+                            )))}
                     </tbody>
                 </table>
             </div>

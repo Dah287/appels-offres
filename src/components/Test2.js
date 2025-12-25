@@ -104,7 +104,8 @@ const Test2 = () => {
                             <option value="DDA">DDA</option>
                             <option value="DRH">DRH</option>
                             <option value="SAICG">SAICG</option>
-                            <option value="SMG">SMG</option>
+                                                                    <option value="SMG">SMG</option>
+                                        <option value="BJC">BJC</option>
                         </select>
                     </div>
                 </div>

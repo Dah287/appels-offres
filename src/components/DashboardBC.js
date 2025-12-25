@@ -20,7 +20,7 @@ const DashboardBC = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get('http://localhost:8080/api/v1/bande-commande');
+                const response = await axios.get('http://192.168.1.80:8080/api/v1/bande-commande');
                 setBandeCommandes(response.data);
                 
                 // Extraire les années disponibles

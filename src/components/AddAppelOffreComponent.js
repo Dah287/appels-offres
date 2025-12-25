@@ -244,6 +244,7 @@ const AddAppelOffreComponent = () => {
                                         <option value="DRH">DRH</option>
                                         <option value="SAICG">SAICG</option>
                                         <option value="SMG">SMG</option>
+                                        <option value="BJC">BJC</option>
                                     </select>                                   
                                 </div>
 
@@ -329,16 +330,17 @@ const AddAppelOffreComponent = () => {
                             </div>
 
 
-                                <div className = "form-group mb-2">
-                                    <label className = "form-label"> PME :</label>
-                                    <input
-                                        type = "text"
-                                        placeholder = "Enter PME"
-                                        name = "PME"
-                                        className = "form-control"
-                                        value = {pme}
-                                        onChange = {(e) => setPme(e.target.value)}
-                                        />
+                                <div className="form-group mb-2">
+                                    <label className="form-label">PME :</label>
+                                    <select
+                                        name="PME"
+                                        className="form-control"
+                                        value={pme ?? ""}   // valeur par défaut null
+                                        onChange={(e) => setPme(e.target.value || null)}
+                                    >
+                                        <option value="">Non Réservé</option>
+                                        <option value="Réservé">Réservé</option>
+                                    </select>
                                 </div>
                                 <div className = "form-group mb-2">
                                     <label className = "form-label"> Nombre de Séances :</label>

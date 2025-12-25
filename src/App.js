@@ -26,6 +26,7 @@ import Test from './components/Test';
 import Test2 from './components/Test2';
 import DashboardTable from './components/DashboardTable';
 import DashboardBC from './components/DashboardBC';
+import UserManagementComponent from './components/UserManagementComponent';
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
 
 <Switch>
   <Route exact path="/" component={LoginComponent}></Route>
+    <PrivateRoute path="/admin/users" component={UserManagementComponent} />
   <PrivateRoute path="/appelOffres" component={ListAppelOffreComponent} />
   <PrivateRoute path="/add-appeloffre/:entt" component={AddAppelOffreComponent} />
   <PrivateRoute path="/edit-employee/:id/:entitee" component={AddAppelOffreComponent} />

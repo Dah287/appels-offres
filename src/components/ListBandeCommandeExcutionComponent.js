@@ -137,7 +137,7 @@ const ListBandeCommandeExcutionComponent = () => {
     useAutoLogout();
     return (
         <div className="container-fluid">
-            <h2 className="filter-section-title text-center">Liste des bons de commande</h2>
+            <h2 className="filter-section-title text-center">Liste (Exécution) des bons de commande</h2>
 
 
                        {/* Bouton pour afficher/masquer les filtres */}
@@ -178,7 +178,8 @@ const ListBandeCommandeExcutionComponent = () => {
                                 <option value="DDA">DDA</option>
                                 <option value="DRH">DRH</option>
                                 <option value="SAICG">SAICG</option>
-                                <option value="SMG">SMG</option>
+                                                                        <option value="SMG">SMG</option>
+                                        <option value="BJC">BJC</option>
                             </select>
                         </div>
                     </div>
@@ -231,11 +232,18 @@ const ListBandeCommandeExcutionComponent = () => {
                             <th style={{ textAlign: "center" }}>Date Jugement</th>
                             <th style={{ textAlign: "center" }}>Date Paiement</th>
                             <th style={{ textAlign: "center" }}>Observations</th>
-                            <th className='numero-colonne' style={{ position: 'sticky', right: 0, background: 'white' }}>Actions</th>
+                            <th className='numero-colonne' style={{ width: "240px"}}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-    {(() => {
+    {bandeCommandes.length === 0 ? (
+    <tr>
+      <td colSpan="10" style={{ textAlign: "center", fontWeight: "bold" }}>
+        Aucun bon de commande trouvé
+      </td>
+    </tr>
+  ) : (
+    (() => {
         // Séparer les BC en quatre catégories
         const bcWithPayment = bandeCommandes.filter(bc => bc.datePaiement);
         const bcWithoutPayment = bandeCommandes.filter(bc => 
@@ -377,12 +385,14 @@ const ListBandeCommandeExcutionComponent = () => {
                         <Link 
                             to={`/excution/${bc.id}`} 
                             className="btn btn-info btn-sm"
+
                         >
                             Modifier
                         </Link>
                         <button
                             onClick={() => deleteBandeCommande(bc.id)}
                             className="btn btn-danger btn-sm ms-2"
+
                         >
                             Supprimer
                         </button>
@@ -390,7 +400,7 @@ const ListBandeCommandeExcutionComponent = () => {
                 </tr>
             ))
         ];
-    })()}
+    })())}
 </tbody>
                 </table>
             </div>
