@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const AppelOffre_BASE_REST_API_URL = "http://192.168.1.80:8080/api/v1/appelOffre";
-const LOGIN_BASE_REST_API_URL = "http://192.168.1.80:8080";
+const AppelOffre_BASE_REST_API_URL = "http://192.168.1.14:8080/api/v1/appelOffre";
+const LOGIN_BASE_REST_API_URL = "http://192.168.1.14:8080";
 
 // --- CONFIGURATION DE L'INTERCEPTEUR ---
 // Cet intercepteur s'exécute avant chaque requête envoyée par Axios

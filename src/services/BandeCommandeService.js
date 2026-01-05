@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BANDE_COMMANDE_BASE_REST_API_URL = "http://192.168.1.80:8080/api/v1/bande-commande";
+const BANDE_COMMANDE_BASE_REST_API_URL = "http://192.168.1.14:8080/api/v1/bande-commande";
 
 // --- CONFIGURATION DE L'INTERCEPTEUR JWT ---
 axios.interceptors.request.use(
