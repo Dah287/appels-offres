@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -19,11 +17,14 @@ public class Utilisateur {
     private String username;
 
     @Column(nullable = false)
-    private String password;
+    private String password; // Sera stocké sous forme de hash BCrypt
 
+    @Enumerated(EnumType.STRING) // Stocke le nom de l'enum (ex: "ROLE_ADMIN") en BD
     @Column(nullable = false)
-    private String role;
+    private Role role;
 
     @Column(nullable = false)
     private String entite;
+    @Column(nullable = false)
+    private String nom;
 }

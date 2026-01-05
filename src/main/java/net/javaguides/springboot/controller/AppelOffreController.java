@@ -209,13 +209,13 @@ public class AppelOffreController {
         } else {
             // Cas par défaut : tous les filtres + statut IS NULL + exercice
             if (entite != null && typeMarche != null) {
-                return appelOffreRepository.findByEntiteAndTypeMarcheAndStatutIsNullAndExercice(entite, typeMarche, exercice);
+                return appelOffreRepository.findByEntiteAndTypeMarcheAndExercice(entite, typeMarche, exercice);
             } else if (entite != null) {
-                return appelOffreRepository.findByEntiteAndStatutIsNullAndExercice(entite, exercice);
+                return appelOffreRepository.findByEntiteAndExercice(entite, exercice);
             } else if (typeMarche != null) {
-                return appelOffreRepository.findByTypeMarcheAndStatutIsNullAndExercice(typeMarche, exercice);
+                return appelOffreRepository.findByTypeMarcheAndExercice(typeMarche, exercice);
             } else {
-                return appelOffreRepository.findByStatutIsNullAndExercice(exercice);
+                return appelOffreRepository.findByExercice(exercice);
             }
         }
     }

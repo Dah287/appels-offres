@@ -52,11 +52,21 @@ public interface BandeCommandeRepository extends JpaRepository<BandeCommande, Lo
 
     List<BandeCommande> findByEntiteAndTypeMarcheAndDateOuvertureReelleNotNullAndDateJugementIsNull(String entite, String typeMarche);
 
+
+    List<BandeCommande> findByEntiteAndTypeMarcheAndDateOuvertureReelleIsNotNullAndDateJugementIsNull(String entite, String typeMarche);
     List<BandeCommande> findByEntiteAndDateOuvertureReelleIsNotNullAndDateJugementIsNull(String entite);
 
     List<BandeCommande> findByTypeMarcheAndDateOuvertureReelleIsNotNullAndDateJugementIsNull(String typeMarche);
 
     List<BandeCommande> findByDateOuvertureReelleIsNotNullAndDateJugementIsNull();
+
+
+
+    List<BandeCommande> findByAnne(String anne);
+    List<BandeCommande> findByAnneAndEntite(String anne, String entite);
+    List<BandeCommande> findByAnneAndTypeMarche(String anne, String typeMarche);
+
+
 
 
     @Query(value = """

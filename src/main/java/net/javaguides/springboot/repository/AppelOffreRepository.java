@@ -127,13 +127,13 @@ public interface AppelOffreRepository extends JpaRepository<AppelOffre,Long> {
     List<AppelOffre> findByMarcheViseIsNullAndStatutIsNullAndExercice(String exercice);
 
     // ====== Cas par défaut ======
-    List<AppelOffre> findByEntiteAndTypeMarcheAndStatutIsNullAndExercice(String entite, String typeMarche, String exercice);
-    List<AppelOffre> findByEntiteAndStatutIsNullAndExercice(String entite, String exercice);
-    List<AppelOffre> findByTypeMarcheAndStatutIsNullAndExercice(String typeMarche, String exercice);
-    List<AppelOffre> findByStatutIsNullAndExercice(String exercice);
+    List<AppelOffre> findByEntiteAndTypeMarcheAndExercice(String entite, String typeMarche, String exercice);
+    List<AppelOffre> findByEntiteAndExercice(String entite, String exercice);
+    List<AppelOffre> findByTypeMarcheAndExercice(String typeMarche, String exercice);
+    List<AppelOffre> findByExercice(String exercice);
 
     //
 
     // Dans AppelOffreRepository.java
-    List<AppelOffre> findByExercice(String exercice);
+    //List<AppelOffre> findByExercice(String exercice);
 }

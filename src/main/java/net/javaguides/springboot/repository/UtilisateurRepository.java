@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface UtilisateurRepository extends JpaRepository<Utilisateur,Long> {
     Optional<Utilisateur> findByUsername(String username);
+    Boolean existsByUsername(String username); // Pour vérifier si le pseudo est pris
 }

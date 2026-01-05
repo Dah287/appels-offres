@@ -101,71 +101,109 @@ public class BandeCommandeController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // Récupérer les bandes de commande avec filtres
     @GetMapping
     public List<BandeCommande> getBandeCommandes(
+            @RequestHeader(value = "X-EXERCICE", required = false) String exercice,
             @RequestParam(required = false) String entite,
             @RequestParam(required = false) String typeMarche,
             @RequestParam(required = false) String fitre) {
 
+        List<BandeCommande> result;
+
+        // =========================
+        // FILTRE PAR STATUT
+        // =========================
         if ("transmis".equals(fitre)) {
-            // Bande commande transmise à la commission
+
             if (entite != null && typeMarche != null) {
-                return bandeCommandeRepository.findByEntiteAndTypeMarcheAndTransmisCommissionIsNotNullAndDateOuvertureReelleIsNull(entite, typeMarche);
+                result = bandeCommandeRepository
+                        .findByEntiteAndTypeMarcheAndTransmisCommissionIsNotNullAndDateOuvertureReelleIsNull(entite, typeMarche);
             } else if (entite != null) {
-                return bandeCommandeRepository.findByEntiteAndTransmisCommissionIsNotNullAndDateOuvertureReelleIsNull(entite);
+                result = bandeCommandeRepository
+                        .findByEntiteAndTransmisCommissionIsNotNullAndDateOuvertureReelleIsNull(entite);
             } else if (typeMarche != null) {
-                return bandeCommandeRepository.findByTypeMarcheAndTransmisCommissionIsNotNullAndDateOuvertureReelleIsNull(typeMarche);
+                result = bandeCommandeRepository
+                        .findByTypeMarcheAndTransmisCommissionIsNotNullAndDateOuvertureReelleIsNull(typeMarche);
             } else {
-                return bandeCommandeRepository.findByTransmisCommissionIsNotNullAndDateOuvertureReelleIsNull();
+                result = bandeCommandeRepository
+                        .findByTransmisCommissionIsNotNullAndDateOuvertureReelleIsNull();
             }
+
         } else if ("juge".equals(fitre)) {
-            // Bande commande jugée
+
             if (entite != null && typeMarche != null) {
-                return bandeCommandeRepository.findByEntiteAndTypeMarcheAndDateJugementIsNotNull(entite, typeMarche);
+                result = bandeCommandeRepository
+                        .findByEntiteAndTypeMarcheAndDateJugementIsNotNull(entite, typeMarche);
             } else if (entite != null) {
-                return bandeCommandeRepository.findByEntiteAndDateJugementIsNotNull(entite);
+                result = bandeCommandeRepository
+                        .findByEntiteAndDateJugementIsNotNull(entite);
             } else if (typeMarche != null) {
-                return bandeCommandeRepository.findByTypeMarcheAndDateJugementIsNotNull(typeMarche);
+                result = bandeCommandeRepository
+                        .findByTypeMarcheAndDateJugementIsNotNull(typeMarche);
             } else {
-                return bandeCommandeRepository.findByDateJugementIsNotNull();
+                result = bandeCommandeRepository
+                        .findByDateJugementIsNotNull();
             }
-        }else if ("ouv".equals(fitre)) {
-            // Bande commande jugée
+
+        } else if ("ouv".equals(fitre)) {
+
             if (entite != null && typeMarche != null) {
-                return bandeCommandeRepository.findByEntiteAndTypeMarcheAndDateOuvertureReelleNotNullAndDateJugementIsNull(entite, typeMarche);
+                result = bandeCommandeRepository
+                        .findByEntiteAndTypeMarcheAndDateOuvertureReelleIsNotNullAndDateJugementIsNull(entite, typeMarche);
             } else if (entite != null) {
-                return bandeCommandeRepository.findByEntiteAndDateOuvertureReelleIsNotNullAndDateJugementIsNull(entite);
+                result = bandeCommandeRepository
+                        .findByEntiteAndDateOuvertureReelleIsNotNullAndDateJugementIsNull(entite);
             } else if (typeMarche != null) {
-                return bandeCommandeRepository.findByTypeMarcheAndDateOuvertureReelleIsNotNullAndDateJugementIsNull(typeMarche);
+                result = bandeCommandeRepository
+                        .findByTypeMarcheAndDateOuvertureReelleIsNotNullAndDateJugementIsNull(typeMarche);
             } else {
-                return bandeCommandeRepository.findByDateOuvertureReelleIsNotNullAndDateJugementIsNull();
+                result = bandeCommandeRepository
+                        .findByDateOuvertureReelleIsNotNullAndDateJugementIsNull();
             }
-        }
-        else if ("encours".equals(fitre)) {
-            // Bande commande en cours
+
+        } else if ("encours".equals(fitre)) {
+
             if (entite != null && typeMarche != null) {
-                return bandeCommandeRepository.findByEntiteAndTypeMarcheAndTransmisCommissionIsNullAndDateJugementIsNull(entite, typeMarche);
+                result = bandeCommandeRepository
+                        .findByEntiteAndTypeMarcheAndTransmisCommissionIsNullAndDateJugementIsNull(entite, typeMarche);
             } else if (entite != null) {
-                return bandeCommandeRepository.findByEntiteAndTransmisCommissionIsNullAndDateJugementIsNull(entite);
+                result = bandeCommandeRepository
+                        .findByEntiteAndTransmisCommissionIsNullAndDateJugementIsNull(entite);
             } else if (typeMarche != null) {
-                return bandeCommandeRepository.findByTypeMarcheAndTransmisCommissionIsNullAndDateJugementIsNull(typeMarche);
+                result = bandeCommandeRepository
+                        .findByTypeMarcheAndTransmisCommissionIsNullAndDateJugementIsNull(typeMarche);
             } else {
-                return bandeCommandeRepository.findByTransmisCommissionIsNullAndDateJugementIsNull();
+                result = bandeCommandeRepository
+                        .findByTransmisCommissionIsNullAndDateJugementIsNull();
             }
+
         } else {
-            // Pas de filtre de statut
+            // =========================
+            // PAS DE FILTRE STATUT
+            // =========================
             if (entite != null && typeMarche != null) {
-                return bandeCommandeRepository.findByEntiteAndTypeMarche(entite, typeMarche);
+                result = bandeCommandeRepository.findByEntiteAndTypeMarche(entite, typeMarche);
             } else if (entite != null) {
-                return bandeCommandeRepository.findByEntite(entite);
+                result = bandeCommandeRepository.findByEntite(entite);
             } else if (typeMarche != null) {
-                return bandeCommandeRepository.findByTypeMarche(typeMarche);
+                result = bandeCommandeRepository.findByTypeMarche(typeMarche);
             } else {
-                return bandeCommandeRepository.findAll();
+                result = bandeCommandeRepository.findAll();
             }
         }
+
+        // =========================
+        // FILTRE PAR EXERCICE (ANNEE)
+        // =========================
+        if (exercice != null && !exercice.isEmpty()) {
+            result = result.stream()
+                    .filter(bc -> exercice.equals(bc.getAnne()))
+                    .collect(Collectors.toList());
+        }
+
+        return result;
     }
+
 
     // Dashboard pour les statistiques
     @GetMapping("/dashboard")
