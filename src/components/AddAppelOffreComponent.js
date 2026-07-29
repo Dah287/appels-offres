@@ -318,16 +318,17 @@ const AddAppelOffreComponent = () => {
 
                                 <div className = "form-group mb-2">
                                 <label className = "form-label"> Statut :</label>
-                                <select
+                                    <select
                                     className="form-select"
-                                    value = {statut}
-                                    onChange = {(e) => setStatut(e.target.value)}
-                                >
+                                    value={statut || ""}
+                                    onChange={(e) => setStatut(e.target.value || null)}
+                                    >
                                     <option value="">Normale</option>
                                     <option value="Annulé">Annulé</option>
                                     <option value="Infructueux">Infructueux</option>
                                     <option value="Definitivement">Annulé Définitivement</option>
-                                </select>
+                                    </select>
+
                             </div>
 
 

@@ -1,8 +1,54 @@
 import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Paper,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Chip,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Alert,
+  Snackbar,
+  Tooltip,
+  Card,
+  CardContent,
+  Grid,
+  Avatar,
+  LinearProgress,
+} from '@mui/material';
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Add as AddIcon,
+  PersonAdd as PersonAddIcon,
+  Person as PersonIcon,
+  Security as SecurityIcon,
+  Business as BusinessIcon,
+  CheckCircle as CheckCircleIcon,
+  Cancel as CancelIcon,
+  Save as SaveIcon,
+  Clear as ClearIcon,
+} from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import UtilisateurService from '../services/UtilisateurService';
 
 const UserManagementComponent = () => {
     const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({ 
         nom: '', 
         username: '', 
@@ -13,150 +59,524 @@ const UserManagementComponent = () => {
     const [editMode, setEditMode] = useState(false);
     const [currentUserId, setCurrentUserId] = useState(null);
     const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState('success');
+    const [openDialog, setOpenDialog] = useState(false);
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [userToDelete, setUserToDelete] = useState(null);
 
     useEffect(() => {
         refreshUsers();
     }, []);
 
-    const refreshUsers = () => {
-        UtilisateurService.getAllUsers()
-            .then(res => setUsers(res.data))
-            .catch(err => console.error("Erreur chargement utilisateurs", err));
+    const refreshUsers = async () => {
+        setLoading(true);
+        try {
+            const response = await UtilisateurService.getAllUsers();
+            setUsers(response.data || []);
+        } catch (err) {
+            console.error("Erreur chargement utilisateurs", err);
+            showMessage("❌ Erreur lors du chargement des utilisateurs", 'error');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const showMessage = (msg, type = 'success') => {
+        setMessage(msg);
+        setMessageType(type);
+        setTimeout(() => setMessage(''), 4000);
     };
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (editMode) {
-            UtilisateurService.updateUser(currentUserId, formData).then(() => {
-                setMessage("✅ Utilisateur mis à jour !");
-                resetForm();
-                refreshUsers();
-            });
-        } else {
-            UtilisateurService.createUser(formData).then(() => {
-                setMessage("✅ Utilisateur créé avec succès !");
-                resetForm();
-                refreshUsers();
-            });
+        
+        // Validation basique
+        if (!formData.nom.trim() || !formData.username.trim() || !formData.entite.trim()) {
+            showMessage("⚠️ Veuillez remplir tous les champs obligatoires", 'warning');
+            return;
+        }
+        
+        if (!editMode && !formData.password.trim()) {
+            showMessage("⚠️ Veuillez saisir un mot de passe", 'warning');
+            return;
+        }
+
+        try {
+            if (editMode) {
+                await UtilisateurService.updateUser(currentUserId, formData);
+                showMessage("✅ Utilisateur mis à jour avec succès !");
+            } else {
+                await UtilisateurService.createUser(formData);
+                showMessage("✅ Utilisateur créé avec succès !");
+            }
+            resetForm();
+            refreshUsers();
+            setOpenDialog(false);
+        } catch (err) {
+            console.error("Erreur lors de l'opération", err);
+            showMessage("❌ Erreur lors de l'opération", 'error');
         }
     };
 
     const handleEdit = (user) => {
         setEditMode(true);
         setCurrentUserId(user.id);
-        // On remplit le formulaire avec les données existantes
         setFormData({ 
             nom: user.nom || '', 
-            username: user.username, 
+            username: user.username || '', 
             password: '', 
-            role: user.role, 
-            entite: user.entite 
+            role: user.role || 'ROLE_USER', 
+            entite: user.entite || '' 
         });
+        setOpenDialog(true);
     };
 
-    const handleDelete = (id) => {
-        if (window.confirm("❗ Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
-            UtilisateurService.deleteUser(id).then(() => refreshUsers());
+    const handleDeleteClick = (user) => {
+        setUserToDelete(user);
+        setDeleteDialog(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!userToDelete) return;
+        
+        try {
+            await UtilisateurService.deleteUser(userToDelete.id);
+            showMessage("✅ Utilisateur supprimé avec succès !");
+            refreshUsers();
+        } catch (err) {
+            console.error("Erreur suppression utilisateur", err);
+            showMessage("❌ Erreur lors de la suppression", 'error');
+        } finally {
+            setDeleteDialog(false);
+            setUserToDelete(null);
         }
     };
 
     const resetForm = () => {
         setFormData({ nom: '', username: '', password: '', role: 'ROLE_USER', entite: '' });
         setEditMode(false);
-        setTimeout(() => setMessage(''), 3000); // Efface le message après 3s
+        setCurrentUserId(null);
+        setOpenDialog(false);
     };
 
-    return (
-        <div className="container mt-4">
-            <h2 className="text-success fw-bold mb-4">⚙️ Gestion des Utilisateurs</h2>
+const getRoleLabel = (role) => {
+    switch(role) {
+        case 'ROLE_ADMIN': return 'ADMIN';
+        case 'ROLE_SI': return 'SERVICE SI';
+        case 'ROLE_USER': return 'SOUS ADMIN';
+        case 'CONSULTATION': return 'CONSULTATION';
+        default: return role;
+    }
+};
 
-            {/* Formulaire d'ajout/édition */}
-            <div className="card shadow-sm mb-5 border-0">
-                <div className="card-header bg-success text-white fw-bold">
-                    {editMode ? "📝 Modifier l'utilisateur" : "👤 Ajouter un nouvel utilisateur"}
-                </div>
-                <div className="card-body bg-light">
-                    <form onSubmit={handleSubmit} className="row g-2">
-                        <div className="col-md-2">
-                            <label className="small fw-bold">Nom Complet</label>
-                            <input type="text" name="nom" placeholder="Ex: " className="form-control" 
-                                   value={formData.nom} onChange={handleInputChange} required />
-                        </div>
-                        <div className="col-md-2">
-                            <label className="small fw-bold">Username</label>
-                            <input type="text" name="username" placeholder="Login" className="form-control" 
-                                   value={formData.username} onChange={handleInputChange} required />
-                        </div>
-                        <div className="col-md-2">
-                            <label className="small fw-bold">Mot de passe</label>
-                            <input type="password" name="password" 
-                                   placeholder={editMode ? "Laisser vide" : "Mot de passe"} 
-                                   className="form-control" value={formData.password} 
-                                   onChange={handleInputChange} required={!editMode} />
-                        </div>
-                        <div className="col-md-2">
-                            <label className="small fw-bold">Rôle</label>
-                            <select name="role" className="form-select" value={formData.role} onChange={handleInputChange}>
-                                <option value="ROLE_USER">SOUS ADMIN</option>
-                                <option value="ROLE_ADMIN">ADMIN</option>
-                                <option value="ROLE_SI">SERVICE SI</option>
-                            </select>
-                        </div>
-                        <div className="col-md-2">
-                            <label className="small fw-bold">Entité</label>
-                            <input type="text" name="entite" placeholder="Ex: DPF" className="form-control" 
-                                   value={formData.entite} onChange={handleInputChange} required />
-                        </div>
-                        <div className="col-md-2 d-flex align-items-end gap-1">
-                            <button type="submit" className="btn btn-primary flex-grow-1">
-                                {editMode ? "Mettre à jour" : "Ajouter"}
-                            </button>
-                            {editMode && <button type="button" className="btn btn-secondary" onClick={resetForm}>X</button>}
-                        </div>
-                    </form>
-                    {message && <div className="alert alert-info mt-3 py-1 mb-0">{message}</div>}
-                </div>
-            </div>
+const getRoleColor = (role) => {
+    switch(role) {
+        case 'ROLE_ADMIN': return 'error';
+        case 'ROLE_SI': return 'warning';
+        case 'ROLE_USER': return 'primary';
+        case 'CONSULTATION': return 'info'; // tu peux choisir une couleur différente si tu veux
+        default: return 'default';
+    }
+};
+
+const getRoleIcon = (role) => {
+    switch(role) {
+        case 'ROLE_ADMIN': return <SecurityIcon />;
+        case 'ROLE_SI': return <BusinessIcon />;
+        case 'ROLE_USER': return <PersonIcon />;
+        case 'CONSULTATION': return <VisibilityIcon />; // par exemple pour consultation
+        default: return <PersonIcon />;
+    }
+};
+
+    return (
+        <Box sx={{ p: 3 }}>
+            {/* En-tête */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+                <Box>
+                    <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
+                        👥 Gestion des Utilisateurs
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        Administration des accès et permissions utilisateurs
+                    </Typography>
+                </Box>
+                
+                <Button
+                    variant="contained"
+                    startIcon={<PersonAddIcon />}
+                    onClick={() => {
+                        resetForm();
+                        setOpenDialog(true);
+                    }}
+                    sx={{ 
+                        borderRadius: 2,
+                        textTransform: 'none',
+                        fontWeight: 'bold'
+                    }}
+                >
+                    Nouvel Utilisateur
+                </Button>
+            </Box>
+
+            {/* Statistiques */}
+            <Grid container spacing={2} sx={{ mb: 4 }}>
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card>
+                        <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Avatar sx={{ bgcolor: 'primary.main' }}>
+                                <PersonIcon />
+                            </Avatar>
+                            <Box>
+                                <Typography variant="h6">{users.length}</Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    Total utilisateurs
+                                </Typography>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card>
+                        <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Avatar sx={{ bgcolor: 'error.main' }}>
+                                <SecurityIcon />
+                            </Avatar>
+                            <Box>
+                                <Typography variant="h6">
+                                    {users.filter(u => u.role === 'ROLE_ADMIN').length}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    Administrateurs
+                                </Typography>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card>
+                        <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Avatar sx={{ bgcolor: 'warning.main' }}>
+                                <BusinessIcon />
+                            </Avatar>
+                            <Box>
+                                <Typography variant="h6">
+                                    {users.filter(u => u.role === 'ROLE_SI').length}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    Service SI
+                                </Typography>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={3}>
+                    <Card>
+                        <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Avatar sx={{ bgcolor: 'info.main' }}>
+                                <PersonIcon />
+                            </Avatar>
+                            <Box>
+                                <Typography variant="h6">
+                                    {users.filter(u => u.role === 'ROLE_USER').length}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    Sous Admins
+                                </Typography>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
 
             {/* Tableau des utilisateurs */}
-            <div className="table-responsive shadow-sm rounded">
-                <table className="table table-hover align-middle bg-white">
-                    <thead className="table-dark">
-                        <tr>
-                            <th className="fw-bold text-primary">ID</th>
-                            <th className="fw-bold text-primary">Nom Complet</th>
-                            <th className="fw-bold text-primary">Username</th>
-                            <th className="fw-bold text-primary">Rôle</th>
-                            <th className="fw-bold text-primary">Entité</th>
-                            <th className="text-center fw-bold text-primary">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.map(u => (
-                            <tr key={u.id}>
-                                <td>{u.id}</td>
-                                <td className="fw-bold text-dark">{u.nom}</td>
-                                <td className="text-primary">{u.username}</td>
-                                <td>
-                                    <span className={`badge ${u.role === 'ROLE_ADMIN' ? 'bg-danger' : 'bg-info text-dark'}`}>
-                                        {u.role}
-                                    </span>
-                                </td>
-                                <td>{u.entite}</td>
-                                <td className="text-center">
-                                    <button className="btn btn-outline-warning btn-sm me-2" onClick={() => handleEdit(u)} title="Modifier">✏️</button>
-                                    <button className="btn btn-outline-danger btn-sm" onClick={() => handleDelete(u.id)} title="Supprimer">🗑️</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            <Paper elevation={2} sx={{ borderRadius: 2, overflow: 'hidden' }}>
+                {loading ? (
+                    <Box sx={{ p: 4, textAlign: 'center' }}>
+                        <LinearProgress sx={{ mb: 2 }} />
+                        <Typography color="text.secondary">Chargement des utilisateurs...</Typography>
+                    </Box>
+                ) : users.length === 0 ? (
+                    <Box sx={{ p: 4, textAlign: 'center' }}>
+                        <PersonIcon sx={{ fontSize: 60, color: 'text.disabled', mb: 2 }} />
+                        <Typography variant="h6" color="text.secondary" gutterBottom>
+                            Aucun utilisateur trouvé
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            Cliquez sur "Nouvel Utilisateur" pour commencer
+                        </Typography>
+                    </Box>
+                ) : (
+                    <TableContainer>
+                        <Table>
+                            <TableHead sx={{ bgcolor: 'primary.main' }}>
+                                <TableRow>
+                                    <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ID</TableCell>
+                                    <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Utilisateur</TableCell>
+                                    <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Identifiant</TableCell>
+                                    <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Rôle</TableCell>
+                                    <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Entité</TableCell>
+                                    <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Actions</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {users.map((user) => (
+                                    <TableRow 
+                                        key={user.id}
+                                        hover
+                                        sx={{ 
+                                            '&:nth-of-type(odd)': { bgcolor: 'action.hover' },
+                                            '&:hover': { bgcolor: 'action.selected' }
+                                        }}
+                                    >
+                                        <TableCell>
+                                            <Typography variant="body2" color="text.secondary">
+                                                #{user.id}
+                                            </Typography>
+                                        </TableCell>
+                                        
+                                        <TableCell>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                                <Avatar sx={{ bgcolor: 'primary.light', width: 36, height: 36 }}>
+                                                    {getRoleIcon(user.role)}
+                                                </Avatar>
+                                                <Box>
+                                                    <Typography variant="body1" fontWeight="medium">
+                                                        {user.nom}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        </TableCell>
+                                        
+                                        <TableCell>
+                                            <Typography variant="body2" color="primary">
+                                                @{user.username}
+                                            </Typography>
+                                        </TableCell>
+                                        
+                                        <TableCell>
+                                            <Chip
+                                                icon={getRoleIcon(user.role)}
+                                                label={getRoleLabel(user.role)}
+                                                color={getRoleColor(user.role)}
+                                                size="small"
+                                                variant="outlined"
+                                            />
+                                        </TableCell>
+                                        
+                                        <TableCell>
+                                            <Chip
+                                                label={user.entite}
+                                                size="small"
+                                                sx={{ 
+                                                    bgcolor: 'secondary.light',
+                                                    color: 'secondary.dark'
+                                                }}
+                                            />
+                                        </TableCell>
+                                        
+                                        <TableCell align="center">
+                                            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+                                                <Tooltip title="Modifier">
+                                                    <IconButton 
+                                                        color="primary" 
+                                                        size="small"
+                                                        onClick={() => handleEdit(user)}
+                                                    >
+                                                        <EditIcon fontSize="small" />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                
+                                                <Tooltip title="Supprimer">
+                                                    <IconButton 
+                                                        color="error" 
+                                                        size="small"
+                                                        onClick={() => handleDeleteClick(user)}
+                                                    >
+                                                        <DeleteIcon fontSize="small" />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                )}
+            </Paper>
+
+            {/* Dialog pour ajouter/modifier */}
+            <Dialog 
+                open={openDialog} 
+                onClose={resetForm}
+                maxWidth="sm"
+                fullWidth
+            >
+                <DialogTitle sx={{ bgcolor: 'primary.main', color: 'white' }}>
+                    {editMode ? "✏️ Modifier l'utilisateur" : "👤 Nouvel utilisateur"}
+                </DialogTitle>
+                
+                <DialogContent sx={{ pt: 3 }}>
+                    <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <TextField
+                            label="Nom complet"
+                            name="nom"
+                            value={formData.nom}
+                            onChange={handleInputChange}
+                            required
+                            fullWidth
+                            autoFocus
+                        />
+                        
+                        <TextField
+                            label="Nom d'utilisateur"
+                            name="username"
+                            value={formData.username}
+                            onChange={handleInputChange}
+                            required
+                            fullWidth
+                        />
+                        
+                        <TextField
+                            label={editMode ? "Mot de passe (laisser vide pour ne pas changer)" : "Mot de passe"}
+                            name="password"
+                            type="password"
+                            value={formData.password}
+                            onChange={handleInputChange}
+                            required={!editMode}
+                            fullWidth
+                        />
+                        
+                        <FormControl fullWidth>
+                            <InputLabel>Rôle</InputLabel>
+                            <Select
+                                name="role"
+                                value={formData.role}
+                                onChange={handleInputChange}
+                                label="Rôle"
+                            >
+                                <MenuItem value="ROLE_USER">SOUS ADMIN</MenuItem>
+                                <MenuItem value="ROLE_ADMIN">ADMIN</MenuItem>
+                                <MenuItem value="ROLE_SI">SERVICE SI</MenuItem>
+                                <MenuItem value="CONSULTATION">CONSULTATION</MenuItem>
+                            </Select>
+                        </FormControl>
+                        
+                        <TextField
+                            label="Entité"
+                            name="entite"
+                            value={formData.entite}
+                            onChange={handleInputChange}
+                            required
+                            fullWidth
+                            placeholder="Ex: DPF, DAF, DRH..."
+                        />
+                    </Box>
+                </DialogContent>
+                
+                <DialogActions sx={{ p: 2 }}>
+                    <Button 
+                        onClick={resetForm}
+                        startIcon={<ClearIcon />}
+                        color="inherit"
+                    >
+                        Annuler
+                    </Button>
+                    
+                    <Button 
+                        onClick={handleSubmit}
+                        variant="contained"
+                        startIcon={editMode ? <SaveIcon /> : <AddIcon />}
+                        sx={{ minWidth: 120 }}
+                    >
+                        {editMode ? "Mettre à jour" : "Ajouter"}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Dialog de confirmation de suppression */}
+            <Dialog 
+                open={deleteDialog} 
+                onClose={() => setDeleteDialog(false)}
+                maxWidth="xs"
+            >
+                <DialogTitle sx={{ color: 'error.main' }}>
+                    ⚠️ Confirmer la suppression
+                </DialogTitle>
+                
+                <DialogContent>
+                    {userToDelete && (
+                        <>
+                            <Alert severity="warning" sx={{ mb: 2 }}>
+                                Cette action est irréversible
+                            </Alert>
+                            
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                                <Avatar sx={{ bgcolor: 'error.light' }}>
+                                    {getRoleIcon(userToDelete.role)}
+                                </Avatar>
+                                <Box>
+                                    <Typography fontWeight="bold">
+                                        {userToDelete.nom}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        @{userToDelete.username} • {getRoleLabel(userToDelete.role)}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            
+                            <Typography variant="body2">
+                                Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+                            </Typography>
+                        </>
+                    )}
+                </DialogContent>
+                
+                <DialogActions>
+                    <Button 
+                        onClick={() => setDeleteDialog(false)}
+                        startIcon={<CancelIcon />}
+                        color="inherit"
+                    >
+                        Annuler
+                    </Button>
+                    
+                    <Button 
+                        onClick={handleDeleteConfirm}
+                        variant="contained"
+                        color="error"
+                        startIcon={<DeleteIcon />}
+                    >
+                        Supprimer
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Notifications */}
+            <Snackbar
+                open={!!message}
+                autoHideDuration={4000}
+                onClose={() => setMessage('')}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+                <Alert 
+                    onClose={() => setMessage('')} 
+                    severity={messageType}
+                    sx={{ width: '100%' }}
+                    variant="filled"
+                >
+                    {message}
+                </Alert>
+            </Snackbar>
+        </Box>
     );
 };
 

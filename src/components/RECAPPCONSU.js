@@ -7,7 +7,7 @@ import useAutoLogout from './useAutoLogout';
 
 
 import FileDownloadIcon from '@mui/icons-material/FileDownload'; // Icône pour l'export Excel
-const RECAPP = () => {
+const RECAPPCONSU = () => {
 
   const user = JSON.parse(sessionStorage.getItem('user'));
   
@@ -381,7 +381,7 @@ const deleteappelOffre = (appelOffreId) => {
       <th style={{ textAlign: "center",width: "80px"  }}>Marché Visé</th>
       <th style={{ textAlign: "center",width: "80px"  }}>ODS</th>
       <th style={{ textAlign: "center",width: "80px"  }}>Délai d'exécution</th>
-      <th  className="numero-colonne cccc" style={{ textAlign: "center" ,width: "65px"}}>Actions</th>
+
     </tr>
   </thead>
   <tbody>
@@ -460,23 +460,7 @@ const deleteappelOffre = (appelOffreId) => {
           <td style={{ textAlign: "center"}}>{appel.ods}</td>
           <td style={{ textAlign: "center"}}>{appel.delai}</td>
      
-          <td className='numero-colonne' style={{  alignItems: "center" ,width: "100px"}}>
-            <Link
-              className="btn btn-info bnbn"
-              style={{
-                
-                fontSize: "12px",
-                width: "120px",
-                paddingLeft : "1px",
-                paddingRight:"1px"
-              
-              }}
-              to={`/updateRecapp/${appel.id}/${isBloque}`}
-            >
-              Modifier
-            </Link>
 
-          </td>
         </tr>
       ))
   ) : (
@@ -498,4 +482,4 @@ const deleteappelOffre = (appelOffreId) => {
 
 
 
-export default RECAPP
+export default RECAPPCONSU

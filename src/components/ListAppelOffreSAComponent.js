@@ -39,12 +39,12 @@ const [totalss, setTotalss] = useState({
 });
 
 const ent = "SA"
-  useEffect(() => {
-    
-        getAllAppelOffre(entiteF,typeMarcheF,fitre,visa);
-        getDashboardData(entiteF); // Appel avec l'entité sélectionnée
-        getDashboardData1(entiteF); // Appel avec l'entité sélectionnée
-      }, [entiteF, typeMarcheF,fitre,visa])
+// 1. Mettre à jour le useEffect pour surveiller aussi fitre et typeMarcheF
+useEffect(() => {
+    getAllAppelOffre(entiteF, typeMarcheF, fitre, visa);
+    getDashboardData(entiteF, fitre, typeMarcheF); // On passe les nouveaux filtres
+    getDashboardData1(entiteF); // Appel avec l'entité sélectionnée
+}, [entiteF, typeMarcheF, fitre, visa])
 
     const getAllAppelOffre = (entiteF,typeMarcheF,fitre,visa) => {
         AppelOffreService.getAllAppelOffre(entiteF,typeMarcheF,fitre,visa).then((response) => {
@@ -57,8 +57,10 @@ const ent = "SA"
         })
     } 
 
-    const getDashboardData = (entite) => {
-      AppelOffreService.getDashboard(entite).then((response) => {
+// 2. Mettre à jour la définition de getDashboardData
+const getDashboardData = (entite, situation, typeMarche) => {
+    // On passe les 3 paramètres au service
+    AppelOffreService.getDashboard(entite, situation, typeMarche).then((response) => {
         const data = response.data;
     
         console.log("Données reçues:", data);
@@ -376,7 +378,7 @@ const deleteappelOffre = (appelOffreId) => {
       </th>
           {/* heure */}
       <th style={{ textAlign: "center" ,width: "80px" }}>Jugement</th>
-      <th style={{ textAlign: "center" ,width: "80px" }}>Observations</th>
+      <th style={{ textAlign: "center" ,width: "80px" }}>Société / Obs.</th>
       <th  className="cccc" style={{ textAlign: "center" ,width: "85px"}}>Actions</th>
     </tr>
   </thead>
@@ -460,11 +462,26 @@ const deleteappelOffre = (appelOffreId) => {
         )}
           </td>
           {/* heure */}
-          <td>
-            {appel.dateJugement || 
-            (appel.dateOuvertureReelle && new Date(appel.dateOuvertureReelle) > new Date() ? "À venir" : 
-              (appel.dateOuvertureReelle ? "En cours" : "-"))}
-          </td>
+<td>
+  {(() => {
+    // 1. Priorité à la date de jugement si elle existe
+    if (appel.dateJugement) {
+      return appel.dateJugement;
+    }
+    // 2. Gestion des statuts particuliers (pas de "En cours" / "À venir")
+    const statut = appel.statut;
+    if (statut === "Annulé" || statut === "Infructueux" || statut === "Definitivement") {
+      return statut;
+    }
+    // 3. Comportement original
+    if (appel.dateOuvertureReelle) {
+      const dateOuverture = new Date(appel.dateOuvertureReelle);
+      const aujourdHui = new Date();
+      return dateOuverture > aujourdHui ? "À venir" : "En cours";
+    }
+    return "-";
+  })()}
+</td>
           <td>{appel.observations}</td>
           <td style={{  alignItems: "center" ,width: "160px"}}>
                      <Link

@@ -112,6 +112,7 @@ const HeaderComponent = () => {
                 <Link className="btn-nav" to="/excution-bandecommande">Exécution BC</Link>
                 <Link className="btn-nav" to="/TableauBord">RECAP BC</Link>
                 <Link className="btn-nav" to="/admin/users">Utilisateurs</Link>
+                <Link className="btn-nav" to="/prix-reference">Prix de Référence</Link>
               </>
             )}
 
@@ -124,6 +125,7 @@ const HeaderComponent = () => {
                 <Link className="btn-nav" to="/bande-commandes">BC à lancer</Link>
                 <Link className="btn-nav" to="/excution-bandecommande">Exécution BC</Link>
                 <Link className="btn-nav" to="/TableauBord">RECAP BC</Link>
+                <Link className="btn-nav" to="/prix-reference">Prix de Référence</Link>
               </>
             )}
 
@@ -133,6 +135,16 @@ const HeaderComponent = () => {
                 <Link className="btn-nav" to="/dashboard">RECAP AO</Link>
                 <Link className="btn-nav" to="/ListSA">Suivi des Appels d'Offres</Link>
                 <Link className="btn-nav" to="/recapp">Exécution des Marchés(Suivi Visa)</Link>
+                <Link className="btn-nav" to="/prix-reference">Prix de Référence</Link>
+              </>
+            )}
+
+                        {/* Rôle CONSULTATION (Utilisateur) */}
+            {user.role === 'CONSULTATION' && (
+              <>
+                <Link className="btn-nav" to="/dashboard">RECAP AO </Link>
+                <Link className="btn-nav" to="/List-consultation">Suivi des Appels d'Offres </Link>
+                <Link className="btn-nav" to="/recapp-consultation">Exécution des Marchés(Suivi Visa) </Link>
               </>
             )}
           </div>

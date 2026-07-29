@@ -51,7 +51,7 @@ const LoginComponent = () => {
     // 🔑 Stockage des informations essentielles
     sessionStorage.setItem("token", token); // Stockage du JWT
     sessionStorage.setItem("exercice", exercice.trim());
-
+sessionStorage.setItem("role", user.role); // stockage du rôle
     // 🔄 Mapping des rôles et Redirection
     // ADMIN par ROLE_ADMIN et sous admin par ROLE_USER
     if (user.role === "ROLE_ADMIN") {
@@ -64,6 +64,10 @@ const LoginComponent = () => {
       sessionStorage.setItem("user", JSON.stringify(user));
       history.push("/ListSA");
     } 
+      else if (user.role === "CONSULTATION") {   // ✅ nouveau rôle
+    sessionStorage.setItem("user", JSON.stringify(user));
+    history.push("/List-consultation");
+  } 
 
       else if (user.role === "ROLE_SI") {
   //    user.displayName = "SI"; // Votre logique de nommage

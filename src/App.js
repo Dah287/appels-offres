@@ -27,6 +27,10 @@ import Test2 from './components/Test2';
 import DashboardTable from './components/DashboardTable';
 import DashboardBC from './components/DashboardBC';
 import UserManagementComponent from './components/UserManagementComponent';
+import ListAppelOffreSACONSULTATION from './components/ListAppelOffreSACONSULTATION';
+import RECAPPCONSU from './components/RECAPPCONSU';
+import PrixReferencePage from './components/PrixReference/PrixReferencePage';
+import HistoryPage from './components/pages/HistoryPage';
 
 function App() {
 
@@ -60,10 +64,12 @@ function App() {
   <PrivateRoute path="/dashboard" component={DashboardAppelOffreComponent} />
   <Route path="/login" component={LoginComponent} />
   <PrivateRoute path="/recapp" component={RECAPP} />
+  <PrivateRoute path="/recapp-consultation" component={RECAPPCONSU} />
   <Route path="/updateRecapp/:id/:bloque" component={UpdateRecappAppelOffreComponent} />
   <PrivateRoute path="/ListAppelOffreParEntite/:entitee" component={ListAppelOffreParEntiteComponent} />
   <PrivateRoute path="/user" component={UserManagement} />
   <PrivateRoute path="/ListSA" component={ListAppelOffreSAComponent} />
+  <PrivateRoute path="/List-consultation" component={ListAppelOffreSACONSULTATION} />
   <PrivateRoute path="/bande-commandes" component={ListBandeCommandeComponent} />
   <PrivateRoute path="/add-bandecommande" component={AddBandeCommandeComponent} />
   <PrivateRoute path="/edit-bandecommande/:id" component={AddBandeCommandeComponent} />
@@ -73,6 +79,10 @@ function App() {
   <PrivateRoute path="/test2" component={Test2} />
   <PrivateRoute path="/t" component={DashboardTable} />
   <PrivateRoute path="/TableauBord" component={DashboardBC} />
+  <PrivateRoute path="/prix-reference" component={PrixReferencePage} />
+   <PrivateRoute path="/analyse/:id" component={PrixReferencePage} />
+    <PrivateRoute path="/historique" component={HistoryPage} />
+    <PrivateRoute path="/prix-reference/:id?" component={PrixReferencePage} />
 </Switch>
 
             {/* <FooterComponent /> */}

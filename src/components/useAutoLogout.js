@@ -13,7 +13,7 @@ const useAutoLogout = () => {
         // Supprimer les données utilisateur
         sessionStorage.clear();
         history.push('/') // Redirection vers la page de login
-      }, 10 * 60 * 1000); // 5 minutes
+      }, 30 * 60 * 1000); // 5 minutes
     };
 
     const events = ['mousemove', 'keydown', 'click', 'scroll'];

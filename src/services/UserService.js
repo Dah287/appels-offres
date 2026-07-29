@@ -1,7 +1,7 @@
 // src/services/UserService.js
 import axios from 'axios';
 
-const API_BASE_URL = "http://192.168.1.14:8080/api/utilisateurs";
+const API_BASE_URL = "http://192.168.1.107:8080/api/utilisateurs";
 
 class UserService {
   // Récupérer la liste des utilisateurs

@@ -1,3 +1,22 @@
+
+/* Force la table à prendre toute la largeur et permet le retour à la ligne */
+.styled-table {
+    width: 100%;
+    table-layout: fixed; /* Important pour contrôler les largeurs */
+    word-break: break-word;
+}
+
+/* Permet aux cellules de passer à la ligne si besoin */
+.styled-table td,
+.styled-table th {
+    white-space: normal; /* Change de 'nowrap' (par défaut dans les tables) à normal */
+    padding: 8px;
+}
+
+/* Ajustez la largeur de chaque colonne si nécessaire (exemple) */
+.styled-table th:nth-child(1) { width: 15%; } /* Entité */
+.styled-table th:nth-child(2) { width: 10%; } /* Total AO */
+/* ... etc */
 th  td {
   
 
@@ -55,4 +74,11 @@ padding-top: 0px;
  
   color: black;            /* Texte blanc */
      /* Texte en gras */
+}
+/* Pour les écrans de portable ou moins */
+@media only screen and (max-width: 1280px) {
+    .vvvv {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
 }
